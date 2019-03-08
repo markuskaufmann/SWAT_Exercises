@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/resources/templates/template.xhtml">
+    <ui:define name="afterHeader">
+        <h1>Purchase Assembly</h1>
+    </ui:define>
+    <ui:define name="content">
+        <h:dataTable id="purchaseTable" var="purchase"
+                     value="#{purchaseJSF.getPurchases(customerSessionJSF.loggedInCustomer)}"
+                     headerClass="purchaseHeader"
+                     rowClasses="purchaseRow"
+                     columnClasses="purchaseDate,purchaseTotalCost,purchasePayId,purchaseCorrelationId,purchaseSalesOrderNo,purchaseState"
+                     cellpadding="10"
+                     cellspacing="0">
+            <h:column>
+                <f:facet name="header">
+                    <div class="purchaseHeaderDate">
+                        Date
+                    </div>
+                </f:facet>
+                #{purchase.datetime.toString()}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="purchaseHeaderTotalCost">
+                        Total Cost [CHF]
+                    </div>
+                </f:facet>
+                #{purchase.totalCost.toString()}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="purchaseHeaderPayId">
+                        Pay ID
+                    </div>
+                </f:facet>
+                #{purchase.payId}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="purchaseHeaderCorrelationId">
+                        Correlation ID
+                    </div>
+                </f:facet>
+                #{purchase.correlationId}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="purchaseHeaderSalesOrderNo">
+                        Sales Order No.
+                    </div>
+                </f:facet>
+                #{purchase.salesOrderNo}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="purchaseHeaderState">
+                        State
+                    </div>
+                </f:facet>
+                #{purchase.state}
+            </h:column>
+        </h:dataTable>
+    </ui:define>
+</ui:composition>

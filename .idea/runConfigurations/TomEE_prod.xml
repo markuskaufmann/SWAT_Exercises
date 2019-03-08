@@ -1,0 +1,66 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TomEE prod" type="TomeeConfiguration" factoryName="Remote" APPLICATION_SERVER_NAME="TomEE 8.5.32" ALTERNATIVE_JRE_ENABLED="false">
+    <option name="HOST" value="enapp-was115.el.eee.intern" />
+    <option name="LOCAL" value="false" />
+    <option name="OPEN_IN_BROWSER_URL" value="http://enapp-was115.el.eee.intern:8080/enapp" />
+    <deployment />
+    <server-settings>
+      <data>
+        <option name="targets">
+          <list>
+            <WatchedTargetModelImpl>
+              <option name="name" value="CONTEXT_XML" />
+              <option name="transportStagingTarget">
+                <TransportTarget>
+                  <option name="id" value="fec11e76-cc8c-437d-aa29-e680b1560818" />
+                  <id>fec11e76-cc8c-437d-aa29-e680b1560818</id>
+                </TransportTarget>
+              </option>
+              <option name="watchedLocalPath" value="" />
+              <watched-path />
+              <name>CONTEXT_XML</name>
+              <transport-target>
+                <TransportTarget>
+                  <option name="id" value="fec11e76-cc8c-437d-aa29-e680b1560818" />
+                  <id>fec11e76-cc8c-437d-aa29-e680b1560818</id>
+                </TransportTarget>
+              </transport-target>
+            </WatchedTargetModelImpl>
+            <StagingTargetModelImpl>
+              <option name="name" value="STAGING" />
+              <option name="stagingRemotePath" value="" />
+              <option name="transportStagingTarget">
+                <TransportTarget>
+                  <option name="id" value="a77496d4-da4b-4a88-abe1-453635116e43" />
+                  <id>a77496d4-da4b-4a88-abe1-453635116e43</id>
+                </TransportTarget>
+              </option>
+              <staging-path />
+              <name>STAGING</name>
+              <transport-target>
+                <TransportTarget>
+                  <option name="id" value="a77496d4-da4b-4a88-abe1-453635116e43" />
+                  <id>a77496d4-da4b-4a88-abe1-453635116e43</id>
+                </TransportTarget>
+              </transport-target>
+            </StagingTargetModelImpl>
+          </list>
+        </option>
+        <option name="transportHostId" />
+        <host-id />
+      </data>
+    </server-settings>
+    <predefined_log_file id="Tomcat" enabled="true" />
+    <predefined_log_file id="TOMCAT_LOCALHOST_LOG_ID" enabled="true" />
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="8000" />
+      <option name="LOCAL" value="false" />
+    </RunnerSettings>
+    <method v="2">
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="install" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="undeploy prod" run_configuration_type="MavenRunConfiguration" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="deploy prod" run_configuration_type="MavenRunConfiguration" />
+    </method>
+  </configuration>
+</component>

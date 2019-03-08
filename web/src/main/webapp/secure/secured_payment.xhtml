@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/resources/templates/template.xhtml">
+    <ui:define name="title">ENAPP Webshop G15</ui:define>
+    <ui:define name="afterHeader">
+        <h1>Payment Method</h1>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="paymentControlContainer">
+            <h:commandButton action="#{basketJSF.goToBasket}"
+                             styleClass="cancelsubmit commandbutton"
+                             value="Cancel"/>
+            <h:commandButton action="#{basketJSF.checkout}" styleClass="confirmsubmit commandbutton"
+                             value="Submit"/>
+        </h:form>
+        <h:panelGroup id="paymentMessageContainer" styleClass="registerMessageContainer"
+                      rendered="#{basketJSF.errorMessage ne null}">
+            <h:outputText value="#{basketJSF.errorMessage}"
+                          styleClass="registerCommonMessage registerErrorMessage"
+                          rendered="#{basketJSF.errorMessage ne null and basketJSF.errorMessage ne ''}"/>
+        </h:panelGroup>
+        <div id="paymentMethodContainer">
+            <div id="pmSelectionContainer">
+                <h:outputText styleClass="pmSelectLbl" value="Currently selected: "/>
+                <h:outputText styleClass="pmSelectVal" id="pmCurrent"
+                              value="#{basketJSF.getSelectedPaymentMethod().issuer}"/>
+            </div>
+            <h:dataTable id="paymentMethodTable" var="pm" value="#{basketJSF.paymentMethods}"
+                         headerClass="pmHeader"
+                         rowClasses="pmRow"
+                         columnClasses="pmColLogo,pmColCardNo,pmColCVC,pmColED,pmColSave"
+                         cellpadding="10"
+                         cellspacing="0">
+                <h:column>
+                    <f:facet name="header">
+                        <div class="pmHeaderLogo">
+                            Brand
+                        </div>
+                    </f:facet>
+                    <h:graphicImage value="/resources/images/#{pm.imageUrl}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <div class="pmHeaderCardNo">
+                            Card No.
+                        </div>
+                    </f:facet>
+                    #{pm.encryptedCardNo}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <div class="pmHeaderCVC">
+                            CVC
+                        </div>
+                    </f:facet>
+                    #{pm.cvc}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <div class="pmHeaderED">
+                            Expiration Date
+                        </div>
+                    </f:facet>
+                    #{pm.expiration}
+                </h:column>
+                <h:column>
+                    <f:facet name="header"/>
+                    <h:commandButton type="button" action="#{basketJSF.updateSelectedPaymentMethod(pm)}"
+                                     styleClass="basketbutton"
+                                     image="/resources/images/save.png">
+                        <f:ajax event="action" render="pmCurrent"/>
+                    </h:commandButton>
+                </h:column>
+            </h:dataTable>
+        </div>
+    </ui:define>
+</ui:composition>

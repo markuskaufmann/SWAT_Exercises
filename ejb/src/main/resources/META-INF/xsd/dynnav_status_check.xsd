@@ -1,0 +1,19 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="salesorder">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="studentName"/>
+                <xs:element type="xs:string" name="postFinancePayId"/>
+                <xs:element type="xs:string" name="dynNAVCustomerNo"/>
+                <xs:element type="xs:string" name="dynNAVSalesOrderNo"/>
+                <xs:element type="xs:float" name="purchaseTotalCost"/>
+                <xs:element type="xs:string" name="status"/>
+                <xs:element type="xs:int" name="purchaseItemCount"/>
+                <xs:element type="xs:string" name="purchaseId"/>
+                <xs:element type="xs:dateTime" name="purchaseDateTime"/>
+                <xs:element type="xs:string" name="correlationId"/>
+                <xs:element type="xs:dateTime" name="lastUpdate"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

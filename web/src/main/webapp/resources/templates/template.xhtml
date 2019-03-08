@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <h:outputStylesheet name="css/default.css"/>
+    <title><ui:insert name="title">ENAPP Webshop G15</ui:insert></title>
+</h:head>
+<h:body>
+    <div id="header">
+        <h:link outcome="/index?faces-redirect=true">
+            <h:graphicImage name="images/logo.gif"/>
+        </h:link>
+    </div>
+    <div id="basketContainer" class="centeredContainer">
+        <h:form id="basketLinkForm">
+            <h:commandButton action="#{basketJSF.goToBasket}"
+                             value="My Basket (#{basketJSF.basketSize})"
+                             styleClass="basketLink"/>
+        </h:form>
+    </div>
+    <div id="afterHeader" class="centeredContainer">
+        <ui:insert name="afterHeader">ENAPP Webshop G15</ui:insert>
+    </div>
+    <div>
+        <div id="left">
+            <h:form id="content_form">
+                <ul>
+                    <li><h:commandLink action="/index?faces-redirect=true" value="Home"/></li>
+                    <li><h:commandLink action="/catalog?faces-redirect=true" value="Product Catalog"/></li>
+                    <li><h:commandLink action="/secure/secured_index?faces-redirect=true" value="My Account"/></li>
+                    <ui:fragment
+                            rendered="#{customerSessionJSF.loggedInCustomer ne null
+                                        and customerSessionJSF.loggedInCustomer.isAdmin}">
+                        <li><h:commandButton action="/secure_admin/adm_customer_management?faces-redirect=true"
+                                             value="Manage Customers"
+                                             styleClass="leftcommand"/></li>
+                    </ui:fragment>
+                    <ui:fragment
+                            rendered="#{customerSessionJSF.loggedInCustomer ne null}">
+                        <li><h:commandButton action="#{customerSessionJSF.logout}" value="Logout"
+                                             styleClass="leftcommand"/></li>
+                    </ui:fragment>
+                </ul>
+            </h:form>
+        </div>
+        <div id="content" class="content">
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+    </div>
+    <div id="bottom">
+        <span>G15-Webshop@ENAPP</span>
+    </div>
+</h:body>
+</html>

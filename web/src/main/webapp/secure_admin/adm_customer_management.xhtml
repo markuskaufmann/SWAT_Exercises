@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/resources/templates/template.xhtml">
+    <ui:define name="afterHeader">
+        <h1>Customer Management</h1>
+    </ui:define>
+    <ui:define name="content">
+        <h:dataTable id="customerTable" var="customer"
+                     value="#{customerManagerJSF.getCustomers(customerSessionJSF.loggedInCustomer)}"
+                     headerClass="customerHeader"
+                     rowClasses="customerRow"
+                     columnClasses="customerName,customerFN,customerLN,customerEdit"
+                     cellpadding="10"
+                     cellspacing="0">
+            <h:column>
+                <f:facet name="header">
+                    <div class="customerHeaderName">
+                        Username
+                    </div>
+                </f:facet>
+                #{customer.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="customerHeaderFN">
+                        First Name
+                    </div>
+                </f:facet>
+                #{customer.firstname}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="customerHeaderLN">
+                        Last Name
+                    </div>
+                </f:facet>
+                #{customer.lastname}
+            </h:column>
+            <h:column>
+                <f:facet name="header"/>
+                <h:commandButton action="#{editCustomerJSF.init(customer)}"
+                                 styleClass="basketbutton"
+                                 image="../resources/images/edit.png">
+                    <f:ajax event="action"/>
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>
+    </ui:define>
+</ui:composition>

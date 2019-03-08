@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/resources/templates/template.xhtml">
+    <ui:define name="title">ENAPP Webshop G15</ui:define>
+    <ui:define name="afterHeader">
+        <h1>Payment Assembly</h1>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="paymentAssemblyControlContainer">
+            <h:commandButton action="#{basketJSF.goToBasket}"
+                             styleClass="cancelsubmit commandbutton"
+                             value="Cancel"/>
+            <h:commandButton action="#{basketJSF.goToPaymentMethod}" styleClass="confirmsubmit commandbutton"
+                             value="Submit"/>
+        </h:form>
+        <h:dataTable id="paymentAssemblyTable" var="item" value="#{basketJSF.paymentAssembly.itemCosts}"
+                     headerClass="paymentAssemblyHeader"
+                     rowClasses="paymentAssemblyRow"
+                     columnClasses="paTitle,paPrice,paQuantity,paItemCost"
+                     cellpadding="10"
+                     cellspacing="0">
+            <h:column>
+                <f:facet name="header">
+                    <div class="paHeaderTitle">
+                        Item
+                    </div>
+                </f:facet>
+                #{item.key.product.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="paHeaderPrice">
+                        Price
+                    </div>
+                </f:facet>
+                CHF #{item.key.product.unitprice}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="paHeaderQuantity">
+                        Quantity
+                    </div>
+                </f:facet>
+                #{item.key.quantity}
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <div class="paHeaderItemCost">
+                        Cost
+                    </div>
+                </f:facet>
+                CHF #{item.value}
+            </h:column>
+            <f:facet name="footer">
+                <h:panelGroup styleClass="paResultRow">
+                    <h:outputText value="Total: CHF #{basketJSF.paymentAssembly.totalCost}"/>
+                </h:panelGroup>
+            </f:facet>
+        </h:dataTable>
+    </ui:define>
+</ui:composition>

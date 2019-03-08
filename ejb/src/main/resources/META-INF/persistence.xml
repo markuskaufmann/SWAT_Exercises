@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="webshop" transaction-type="JTA">
+        <jta-data-source>webshop</jta-data-source>
+        <!-- Converters -->
+        <class>ch.hslu.edu.enapp.webshop.convert.PasswordConverter</class>
+        <!-- Entities / Model -->
+        <class>ch.hslu.edu.enapp.webshop.entity.CustomerEntity</class>
+        <class>ch.hslu.edu.enapp.webshop.entity.CustomertoroleEntity</class>
+        <class>ch.hslu.edu.enapp.webshop.entity.ProductEntity</class>
+        <class>ch.hslu.edu.enapp.webshop.entity.PurchaseEntity</class>
+        <class>ch.hslu.edu.enapp.webshop.entity.PurchaseitemEntity</class>
+        <class>ch.hslu.edu.enapp.webshop.entity.RoleEntity</class>
+        <properties>
+            <property name="eclipselink.logging.logger" value="ServerLogger"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+        </properties>
+    </persistence-unit>
+</persistence>
