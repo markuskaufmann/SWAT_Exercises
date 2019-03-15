@@ -13,16 +13,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Stateless
 public class CustomerBean implements ch.hslu.edu.enapp.webshop.service.CustomerServiceLocal {
 
+    private static final String ERR_NO_CUSTOMER_KEY = "{customer}";
+    private static final String ERR_NO_CUSTOMER_FOUND = "No customer with the provided username '" + ERR_NO_CUSTOMER_KEY + "' found.";
+
     @PersistenceContext
     private EntityManager em;
-
-    public CustomerBean() {
-    }
 
     @Override
     public boolean doesUsernameExist(final String username) {
@@ -39,11 +38,8 @@ public class CustomerBean implements ch.hslu.edu.enapp.webshop.service.CustomerS
         if (username == null || username.trim().length() == 0) {
             throw new IllegalArgumentException("The provided username can't be null or empty");
         }
-        final Optional<CustomerEntity> customerOptional = getCustomerByUsername(username);
-        if (!customerOptional.isPresent()) {
-            throw new NoCustomerFoundException("No customer with the provided username '" + username + "' found.");
-        }
-        return CustomerWrapper.entityToDto(customerOptional.get());
+        final CustomerEntity customerEntity = getCustomerByUsername(username);
+        return CustomerWrapper.entityToDto(customerEntity);
     }
 
     @Override
@@ -81,11 +77,7 @@ public class CustomerBean implements ch.hslu.edu.enapp.webshop.service.CustomerS
             throw new IllegalArgumentException("The provided customer object can't be null");
         }
         final String username = customer.getName();
-        final Optional<CustomerEntity> customerOptional = getCustomerByUsername(username);
-        if (!customerOptional.isPresent()) {
-            throw new NoCustomerFoundException("No customer with the provided username '" + username + "' found.");
-        }
-        final CustomerEntity customerEntity = customerOptional.get();
+        final CustomerEntity customerEntity = getCustomerByUsername(username);
         customerEntity.setFirstname(customer.getFirstname());
         customerEntity.setLastname(customer.getLastname());
         customerEntity.setAddress(customer.getAddress());
@@ -103,23 +95,19 @@ public class CustomerBean implements ch.hslu.edu.enapp.webshop.service.CustomerS
         if (dynNAVId == null || dynNAVId.trim().length() == 0) {
             throw new IllegalArgumentException("The provided DynNAVId can't be null or empty");
         }
-        final Optional<CustomerEntity> customerOptional = getCustomerByUsername(username);
-        if (!customerOptional.isPresent()) {
-            throw new NoCustomerFoundException("No customer with the provided username '" + username + "' found.");
-        }
-        final CustomerEntity customerEntity = customerOptional.get();
+        final CustomerEntity customerEntity = getCustomerByUsername(username);
         customerEntity.setDynNAVId(dynNAVId);
         this.em.flush();
         return CustomerWrapper.entityToDto(customerEntity);
     }
 
-    private Optional<CustomerEntity> getCustomerByUsername(final String username) {
+    private CustomerEntity getCustomerByUsername(final String username) throws NoCustomerFoundException {
         final TypedQuery<CustomerEntity> customerQuery = this.em.createNamedQuery("getCustomerByName", CustomerEntity.class);
         customerQuery.setParameter("name", username);
         final List<CustomerEntity> customers = customerQuery.getResultList();
         if (customers.isEmpty()) {
-            return Optional.empty();
+            throw new NoCustomerFoundException(ERR_NO_CUSTOMER_FOUND.replace(ERR_NO_CUSTOMER_KEY, username));
         }
-        return Optional.of(customers.get(0));
+        return customers.get(0);
     }
 }
