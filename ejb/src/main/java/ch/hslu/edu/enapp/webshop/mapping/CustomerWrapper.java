@@ -6,9 +6,13 @@ import ch.hslu.edu.enapp.webshop.entity.CustomerEntity;
 import ch.hslu.edu.enapp.webshop.entity.CustomertoroleEntity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public final class CustomerWrapper {
+
+    private CustomerWrapper() {
+    }
 
     public static Customer entityToDto(final CustomerEntity customerEntity) {
         if (customerEntity == null) {
@@ -16,7 +20,10 @@ public final class CustomerWrapper {
         }
         final Customer customer = new Customer(customerEntity.getName(), customerEntity.getPassword(), customerEntity.getFirstname(), customerEntity.getLastname(),
                 customerEntity.getAddress(), customerEntity.getEmail(), customerEntity.getDynNAVId());
-        final List<CustomertoroleEntity> customerRoles = new ArrayList<>(customerEntity.getCustomertorolesByName());
+        final Collection<CustomertoroleEntity> customerToRole = customerEntity.getCustomertorolesByName();
+        final List<CustomertoroleEntity> customerRoles = customerToRole != null
+                ? new ArrayList<>(customerEntity.getCustomertorolesByName())
+                : new ArrayList<>();
         final List<Role> roles = new ArrayList<>();
         customerRoles.forEach(customertoroleEntity -> {
             final Role role = RoleWrapper.entityToDto(customertoroleEntity);
