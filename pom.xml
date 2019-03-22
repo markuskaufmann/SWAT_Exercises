@@ -28,12 +28,8 @@
         <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
         <project.maven.version>3.0.5</project.maven.version>
 
-        <checkstyle.config.location>${project.basedir}/../config/checkstyle/checkstyle.xml</checkstyle.config.location>
-        <pmd.config.location>${project.basedir}/../config/pmd/pmd_hslu.xml</pmd.config.location>
-
         <mavenChangesPlugin.version>2.12.1</mavenChangesPlugin.version>
         <mavenChangelogPlugin.version>2.3</mavenChangelogPlugin.version>
-        <jacocoPlugin.version>0.8.3</jacocoPlugin.version>
         <jxrPlugin.version>2.5</jxrPlugin.version>
         <sourcePlugin.version>3.0.1</sourcePlugin.version>
         <findbugsPlugin.version>3.0.5</findbugsPlugin.version>
@@ -263,7 +259,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacocoPlugin.version}</version>
+                <version>0.8.3</version>
                 <executions>
                     <execution>
                         <goals>
