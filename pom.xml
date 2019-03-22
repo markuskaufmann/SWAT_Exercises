@@ -33,15 +33,9 @@
 
         <mavenChangesPlugin.version>2.12.1</mavenChangesPlugin.version>
         <mavenChangelogPlugin.version>2.3</mavenChangelogPlugin.version>
-        <checkstylePlugin.version>3.0.0</checkstylePlugin.version>
         <jacocoPlugin.version>0.8.0</jacocoPlugin.version>
-        <javadocPlugin.version>3.0.0</javadocPlugin.version>
         <jxrPlugin.version>2.5</jxrPlugin.version>
-        <pmdPlugin.version>3.9.0</pmdPlugin.version>
         <sourcePlugin.version>3.0.1</sourcePlugin.version>
-        <surefirePlugin.version>2.20.1</surefirePlugin.version>
-        <surefireReportPlugin.version>${surefirePlugin.version}</surefireReportPlugin.version>
-        <failsafePlugin.version>${surefirePlugin.version}</failsafePlugin.version>
         <findbugsPlugin.version>3.0.5</findbugsPlugin.version>
 
         <!-- HINT: https://gitlab.enterpriselab.ch/oop/oop_maven_template/issues/7 -->
@@ -96,19 +90,19 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.9.1</version>
+                <version>3.12.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>2.15.0</version>
+                <version>2.25.1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>nl.jqno.equalsverifier</groupId>
                 <artifactId>equalsverifier</artifactId>
-                <version>2.4.3</version>
+                <version>3.1.7</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -160,11 +154,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${failsafePlugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.8.2</version>
                 </plugin>
@@ -197,11 +186,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.7</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${surefirePlugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -271,6 +255,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkCount>3</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
