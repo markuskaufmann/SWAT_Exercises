@@ -16,7 +16,7 @@ public final class OrderStateWrapper implements Wrappable<OrderState, OrderState
     public OrderState entityFromDTO(OrderStateDTO orderStateDTO) {
         final OrderState orderState = new OrderState();
         if (orderStateDTO.getId() != -1) {
-            orderState.setId(orderState.getId());
+            orderState.setId(orderStateDTO.getId());
         }
         orderState.setState(orderStateDTO.getOrderState());
         return orderState;

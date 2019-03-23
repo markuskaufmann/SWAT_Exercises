@@ -5,7 +5,6 @@ import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
 import ch.hslu.appe.fbs.model.db.User;
 import ch.hslu.appe.fbs.model.db.UserRole;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -14,17 +13,21 @@ import org.mockito.junit.MockitoJUnitRunner;
 public final class UserWrapperTest {
 
     @Test
-    public void dtoFromEntity_when_userentity_then_userdto() {
+    public void dtoFromEntity_when_userEntity_then_userDTO() {
         // arrange
         final UserWrapper userWrapper = new UserWrapper();
 
+        final int userRoleId = 1;
+        final String userRoleName = "Test";
         final UserRole userRoleEntity = new UserRole();
-        userRoleEntity.setId(1);
-        userRoleEntity.setRoleName("Test");
+        userRoleEntity.setId(userRoleId);
+        userRoleEntity.setRoleName(userRoleName);
 
+        final int userId = 2;
+        final String userName = "maxmuster";
         final User userEntity = new User();
-        userEntity.setId(1);
-        userEntity.setUserName("maxmuster");
+        userEntity.setId(userId);
+        userEntity.setUserName(userName);
         userEntity.setUserRoleByUserRole(userRoleEntity);
 
         //act
@@ -32,28 +35,32 @@ public final class UserWrapperTest {
         final UserRoleDTO userRoleDTO = userDTO.getUserRole();
 
         //assert
-        Assert.assertEquals(userEntity.getId().intValue(), userDTO.getId());
-        Assert.assertEquals(userEntity.getUserName(), userDTO.getUserName());
-        Assert.assertEquals(userRoleEntity.getId().intValue(), userRoleDTO.getId());
-        Assert.assertEquals(userRoleEntity.getRoleName(), userRoleDTO.getUserRole());
+        Assert.assertEquals(userId, userDTO.getId());
+        Assert.assertEquals(userName, userDTO.getUserName());
+        Assert.assertEquals(userRoleId, userRoleDTO.getId());
+        Assert.assertEquals(userRoleName, userRoleDTO.getUserRole());
     }
 
     @Test
-    public void entityFromDTO_when_userdto_then_userentity() {
+    public void entityFromDTO_when_userDTO_then_userEntity() {
         // arrange
         final UserWrapper userWrapper = new UserWrapper();
 
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, "Test");
+        final int userRoleId = 1;
+        final String userRoleName = "Test";
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(userRoleId, userRoleName);
 
-        final UserDTO userDTO = new UserDTO(1, userRoleDTO, "maxmuster");
+        final int userId = 2;
+        final String userName = "maxmuster";
+        final UserDTO userDTO = new UserDTO(userId, userRoleDTO, userName);
 
         //act
         final User userEntity = userWrapper.entityFromDTO(userDTO);
 
         //assert
-        Assert.assertEquals(userDTO.getId(), userEntity.getId().intValue());
-        Assert.assertEquals(userDTO.getUserName(), userEntity.getUserName());
-        Assert.assertEquals(userRoleDTO.getId(), userEntity.getUserRole().intValue());
+        Assert.assertEquals(userId, userEntity.getId().intValue());
+        Assert.assertEquals(userName, userEntity.getUserName());
+        Assert.assertEquals(userRoleId, userEntity.getUserRole().intValue());
         Assert.assertEquals((byte) 0, userEntity.getDeleted().byteValue());
     }
 }
