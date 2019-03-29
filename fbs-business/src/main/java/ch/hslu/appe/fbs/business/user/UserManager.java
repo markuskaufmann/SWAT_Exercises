@@ -12,5 +12,5 @@ public interface UserManager {
      * @return The {@link UserDTO} if the user was successful
      * @throws IllegalArgumentException If the user fails (incorrect user or password)
      */
-    UserDTO loginUser(String name, String password) throws IllegalArgumentException;
+    UserDTO loginUser(String name, String password);
 }

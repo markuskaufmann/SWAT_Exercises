@@ -7,7 +7,6 @@ import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
 import ch.hslu.appe.fbs.data.customer.CustomerPersistor;
-import ch.hslu.appe.fbs.data.customer.CustomerPersistorFactory;
 import ch.hslu.appe.fbs.model.db.Customer;
 import ch.hslu.appe.fbs.wrapper.CustomerWrapper;
 
