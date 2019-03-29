@@ -9,6 +9,7 @@ import ch.hslu.appe.fbs.common.dto.OrderDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.rmi.CustomerService;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -29,7 +30,9 @@ public class FinishOrderController {
 
     private static final Logger LOGGER = LogManager.getLogger(FinishOrderController.class);
 
-    public AnchorPane contentAnchorPane;
+    @FXML
+    private AnchorPane contentAnchorPane;
+
     private Parent specificOrderView;
     private SpecificOrderController specificOrderController;
     private CustomerService customerService;
