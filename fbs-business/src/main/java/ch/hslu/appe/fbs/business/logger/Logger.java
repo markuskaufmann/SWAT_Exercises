@@ -5,7 +5,10 @@ import org.apache.logging.log4j.LogManager;
 
 public class Logger {
 
-    private static final org.apache.logging.log4j.Logger LOG = LogManager.getLogger(Logger.class.getName());
+    private static final org.apache.logging.log4j.Logger LOG = LogManager.getLogger(Logger.class);
+
+    private Logger() {
+    }
 
     public static void logInfo(String username, String message) {
         LOG.info(username + " - " + message);
@@ -18,5 +21,4 @@ public class Logger {
     public static void logError(String username, String message) {
         LOG.error(username + " - " + message);
     }
-
 }

@@ -22,8 +22,8 @@ public class CustomerManagerImpl implements CustomerManager {
     private final CustomerPersistor customerPersistor;
     private final CustomerWrapper customerWrapper;
 
-    public CustomerManagerImpl() {
-        this.customerPersistor = CustomerPersistorFactory.createCustomerPersistor();
+    public CustomerManagerImpl(final CustomerPersistor customerPersistor) {
+        this.customerPersistor = customerPersistor;
         this.customerWrapper = new CustomerWrapper();
     }
 

@@ -90,7 +90,7 @@
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            <mainClass>ch.hslu.appe.fbs.remote.RmiServer</mainClass>
+                            <mainClass>ch.hslu.appe.fbs.remote.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

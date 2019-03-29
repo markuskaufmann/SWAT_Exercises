@@ -1,7 +1,6 @@
-package ch.hslu.appe.fbs.remote.reorder;
+package ch.hslu.appe.fbs.remote.service.reorder;
 
 import ch.hslu.appe.fbs.business.reorder.ReorderManager;
-import ch.hslu.appe.fbs.business.reorder.ReorderManagerFactory;
 import ch.hslu.appe.fbs.common.dto.ReorderDTO;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
@@ -16,8 +15,8 @@ public class ReorderServiceImpl implements ReorderService {
 
     private final ReorderManager reorderManager;
 
-    public ReorderServiceImpl() {
-        this.reorderManager = ReorderManagerFactory.getReorderManager();
+    public ReorderServiceImpl(final ReorderManager reorderManager) {
+        this.reorderManager = reorderManager;
     }
 
     @Override

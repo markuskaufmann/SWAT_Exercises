@@ -2,13 +2,11 @@ package ch.hslu.appe.fbs.business.reorder;
 
 import ch.hslu.appe.fbs.business.authorisation.AuthorisationManager;
 import ch.hslu.appe.fbs.business.item.ItemManager;
-import ch.hslu.appe.fbs.business.item.ItemManagerFactory;
 import ch.hslu.appe.fbs.common.dto.ReorderDTO;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
 import ch.hslu.appe.fbs.data.reorder.ReorderPersistor;
-import ch.hslu.appe.fbs.data.reorder.ReorderPersistorFactory;
 import ch.hslu.appe.fbs.model.db.Reorder;
 import ch.hslu.appe.fbs.wrapper.ItemWrapper;
 import ch.hslu.appe.fbs.wrapper.ReorderWrapper;
@@ -28,10 +26,10 @@ public final class ReorderManagerImpl implements ReorderManager {
     private final ItemManager itemManager;
     private final ItemWrapper itemWrapper;
 
-    public ReorderManagerImpl() {
-        this.reorderPersistor = ReorderPersistorFactory.createReorderPersistor();
+    public ReorderManagerImpl(final ReorderPersistor reorderPersistor, final ItemManager itemManager) {
+        this.reorderPersistor = reorderPersistor;
+        this.itemManager = itemManager;
         this.reorderWrapper = new ReorderWrapper();
-        this.itemManager = ItemManagerFactory.getItemManager();
         this.itemWrapper = new ItemWrapper();
     }
 

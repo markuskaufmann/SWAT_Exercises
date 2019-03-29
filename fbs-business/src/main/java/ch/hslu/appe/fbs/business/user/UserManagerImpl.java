@@ -3,7 +3,6 @@ package ch.hslu.appe.fbs.business.user;
 import ch.hslu.appe.fbs.business.logger.Logger;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.data.user.UserPersistor;
-import ch.hslu.appe.fbs.data.user.UserPersistorFactory;
 import ch.hslu.appe.fbs.model.db.User;
 import ch.hslu.appe.fbs.wrapper.UserWrapper;
 
@@ -14,8 +13,8 @@ public class UserManagerImpl implements UserManager {
     private final UserPersistor userPersistor;
     private UserWrapper userWrapper;
 
-    public UserManagerImpl() {
-        this.userPersistor = UserPersistorFactory.createUserPersistor();
+    public UserManagerImpl(final UserPersistor userPersistor) {
+        this.userPersistor = userPersistor;
         this.userWrapper = new UserWrapper();
     }
 

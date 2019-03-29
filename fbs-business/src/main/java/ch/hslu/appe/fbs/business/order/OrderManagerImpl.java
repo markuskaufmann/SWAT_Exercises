@@ -2,19 +2,14 @@ package ch.hslu.appe.fbs.business.order;
 
 import ch.hslu.appe.fbs.business.authorisation.AuthorisationManager;
 import ch.hslu.appe.fbs.business.bill.BillManager;
-import ch.hslu.appe.fbs.business.bill.BillManagerFactory;
 import ch.hslu.appe.fbs.business.item.ItemManager;
-import ch.hslu.appe.fbs.business.item.ItemManagerFactory;
 import ch.hslu.appe.fbs.business.logger.Logger;
 import ch.hslu.appe.fbs.common.dto.*;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
 import ch.hslu.appe.fbs.data.order.OrderPersistor;
-import ch.hslu.appe.fbs.data.order.OrderPersistorFactory;
 import ch.hslu.appe.fbs.data.orderitem.OrderItemPersistor;
-import ch.hslu.appe.fbs.data.orderitem.OrderItemPersistorFactory;
 import ch.hslu.appe.fbs.data.orderstate.OrderStatePersistor;
-import ch.hslu.appe.fbs.data.orderstate.OrderStatePersistorFactory;
 import ch.hslu.appe.fbs.data.orderstate.OrderStates;
 import ch.hslu.appe.fbs.model.db.Bill;
 import ch.hslu.appe.fbs.model.db.Order;
@@ -41,14 +36,18 @@ public class OrderManagerImpl implements OrderManager {
     private final ItemManager itemManager;
     private final BillManager billManager;
 
-    public OrderManagerImpl() {
-        this.orderPersistor = OrderPersistorFactory.createOrderPersistor();
-        this.orderItemPersistor = OrderItemPersistorFactory.createOrderItemPersistor();
-        this.orderStatePersistor = OrderStatePersistorFactory.createOrderStatePersistor();
+    public OrderManagerImpl(final OrderPersistor orderPersistor,
+                            final OrderItemPersistor orderItemPersistor,
+                            final OrderStatePersistor orderStatePersistor,
+                            final ItemManager itemManager,
+                            final BillManager billManager) {
+        this.orderPersistor = orderPersistor;
+        this.orderItemPersistor = orderItemPersistor;
+        this.orderStatePersistor = orderStatePersistor;
+        this.itemManager = itemManager;
+        this.billManager = billManager;
         this.orderWrapper = new OrderWrapper();
         this.orderItemWrapper = new OrderItemWrapper();
-        this.itemManager = ItemManagerFactory.getItemManager();
-        this.billManager = BillManagerFactory.getBillManager();
     }
 
     @Override

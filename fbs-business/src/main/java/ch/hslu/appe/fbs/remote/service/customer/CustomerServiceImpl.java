@@ -1,11 +1,8 @@
-package ch.hslu.appe.fbs.remote.customer;
+package ch.hslu.appe.fbs.remote.service.customer;
 
 import ch.hslu.appe.fbs.business.bill.BillManager;
-import ch.hslu.appe.fbs.business.bill.BillManagerFactory;
 import ch.hslu.appe.fbs.business.customer.CustomerManager;
-import ch.hslu.appe.fbs.business.customer.CustomerManagerFactory;
 import ch.hslu.appe.fbs.business.order.OrderManager;
-import ch.hslu.appe.fbs.business.order.OrderManagerFactory;
 import ch.hslu.appe.fbs.common.dto.BillDTO;
 import ch.hslu.appe.fbs.common.dto.CustomerDTO;
 import ch.hslu.appe.fbs.common.dto.OrderDTO;
@@ -24,10 +21,10 @@ public class CustomerServiceImpl implements CustomerService {
     private final OrderManager orderManager;
     private final BillManager billManager;
 
-    public CustomerServiceImpl() {
-        this.customerManager = CustomerManagerFactory.getCustomerManager();
-        this.orderManager = OrderManagerFactory.getOrderManager();
-        this.billManager = BillManagerFactory.getBillManager();
+    public CustomerServiceImpl(final CustomerManager customerManager, final OrderManager orderManager, final BillManager billManager) {
+        this.customerManager = customerManager;
+        this.orderManager = orderManager;
+        this.billManager = billManager;
     }
 
     @Override

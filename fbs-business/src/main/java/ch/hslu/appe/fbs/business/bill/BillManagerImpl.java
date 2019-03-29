@@ -7,9 +7,7 @@ import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
 import ch.hslu.appe.fbs.data.bill.BillPersistor;
-import ch.hslu.appe.fbs.data.bill.BillPersistorFactory;
 import ch.hslu.appe.fbs.data.reminder.ReminderPersistor;
-import ch.hslu.appe.fbs.data.reminder.ReminderPersistorFactory;
 import ch.hslu.appe.fbs.model.db.Bill;
 import ch.hslu.appe.fbs.model.db.Order;
 import ch.hslu.appe.fbs.model.db.Reminder;
@@ -29,9 +27,9 @@ public final class BillManagerImpl implements BillManager {
     private final BillWrapper billWrapper;
     private final OrderWrapper orderWrapper;
 
-    public BillManagerImpl() {
-        this.billPersistor = BillPersistorFactory.createBillPersistor();
-        this.reminderPersistor = ReminderPersistorFactory.createReminderPersistor();
+    public BillManagerImpl(final BillPersistor billPersistor, final ReminderPersistor reminderPersistor) {
+        this.billPersistor = billPersistor;
+        this.reminderPersistor = reminderPersistor;
         this.billWrapper = new BillWrapper();
         this.orderWrapper = new OrderWrapper();
     }
@@ -40,9 +38,7 @@ public final class BillManagerImpl implements BillManager {
     public List<BillDTO> getAllBills() {
         synchronized (LOCK) {
             final List<BillDTO> bills = new ArrayList<>();
-            this.billPersistor.getAll().forEach(bill -> {
-                bills.add(this.billWrapper.dtoFromEntity(bill));
-            });
+            this.billPersistor.getAll().forEach(bill -> bills.add(this.billWrapper.dtoFromEntity(bill)));
             return bills;
         }
     }
@@ -62,9 +58,7 @@ public final class BillManagerImpl implements BillManager {
     public List<BillDTO> getBillsByOrderId(int orderId) {
         synchronized (LOCK) {
             final List<BillDTO> bills = new ArrayList<>();
-            this.billPersistor.getByOrderId(orderId).forEach(bill -> {
-                bills.add(this.billWrapper.dtoFromEntity(bill));
-            });
+            this.billPersistor.getByOrderId(orderId).forEach(bill -> bills.add(this.billWrapper.dtoFromEntity(bill)));
             return bills;
         }
     }

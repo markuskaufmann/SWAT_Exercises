@@ -1,7 +1,6 @@
-package ch.hslu.appe.fbs.remote.item;
+package ch.hslu.appe.fbs.remote.service.item;
 
 import ch.hslu.appe.fbs.business.item.ItemManager;
-import ch.hslu.appe.fbs.business.item.ItemManagerFactory;
 import ch.hslu.appe.fbs.common.dto.ItemDTO;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
@@ -14,10 +13,10 @@ import java.util.List;
 
 public class ItemServiceImpl implements ItemService {
 
-    private ItemManager itemManager;
+    private final ItemManager itemManager;
 
-    public ItemServiceImpl() {
-        this.itemManager = ItemManagerFactory.getItemManager();
+    public ItemServiceImpl(final ItemManager itemManager) {
+        this.itemManager = itemManager;
     }
 
     @Override
@@ -30,5 +29,4 @@ public class ItemServiceImpl implements ItemService {
     public String getServiceName() throws RemoteException {
         return RmiLookupTable.getItemServiceName();
     }
-
 }

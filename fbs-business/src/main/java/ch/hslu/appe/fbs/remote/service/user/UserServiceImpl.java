@@ -1,8 +1,7 @@
-package ch.hslu.appe.fbs.remote.user;
+package ch.hslu.appe.fbs.remote.service.user;
 
 import ch.hslu.appe.fbs.business.authorisation.AuthorisationManager;
 import ch.hslu.appe.fbs.business.user.UserManager;
-import ch.hslu.appe.fbs.business.user.UserManagerFactory;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
@@ -17,9 +16,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserManager userManager;
 
-    public UserServiceImpl() throws RemoteException {
+    public UserServiceImpl(final UserManager userManager) {
         super();
-        this.userManager = UserManagerFactory.getUserManager();
+        this.userManager = userManager;
     }
 
     @Override

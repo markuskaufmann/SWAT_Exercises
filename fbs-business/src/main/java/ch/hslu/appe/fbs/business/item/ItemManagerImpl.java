@@ -4,15 +4,12 @@ import ch.hslu.appe.fbs.business.authorisation.AuthorisationManager;
 import ch.hslu.appe.fbs.business.logger.Logger;
 import ch.hslu.appe.fbs.business.stock.Stock;
 import ch.hslu.appe.fbs.business.stock.StockException;
-import ch.hslu.appe.fbs.business.stock.StockFactory;
 import ch.hslu.appe.fbs.common.dto.ItemDTO;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
 import ch.hslu.appe.fbs.data.item.ItemPersistor;
-import ch.hslu.appe.fbs.data.item.ItemPersistorFactory;
 import ch.hslu.appe.fbs.data.reorder.ReorderPersistor;
-import ch.hslu.appe.fbs.data.reorder.ReorderPersistorFactory;
 import ch.hslu.appe.fbs.model.db.Item;
 import ch.hslu.appe.fbs.model.db.Reorder;
 import ch.hslu.appe.fbs.wrapper.ItemWrapper;
@@ -32,11 +29,11 @@ public class ItemManagerImpl implements ItemManager {
     private final ReorderPersistor reorderPersistor;
     private final Stock centralStock;
 
-    public ItemManagerImpl() {
-        this.itemPersistor = ItemPersistorFactory.createItemPersistor();
+    public ItemManagerImpl(final ItemPersistor itemPersistor, final ReorderPersistor reorderPersistor, final Stock stock) {
+        this.itemPersistor = itemPersistor;
+        this.reorderPersistor = reorderPersistor;
+        this.centralStock = stock;
         this.itemWrapper = new ItemWrapper();
-        this.reorderPersistor = ReorderPersistorFactory.createReorderPersistor();
-        this.centralStock = StockFactory.getStock();
     }
 
 
