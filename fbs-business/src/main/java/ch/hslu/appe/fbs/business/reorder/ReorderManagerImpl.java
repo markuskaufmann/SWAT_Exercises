@@ -57,6 +57,4 @@ public final class ReorderManagerImpl implements ReorderManager {
             return reorders;
         }
     }
-
-
 }

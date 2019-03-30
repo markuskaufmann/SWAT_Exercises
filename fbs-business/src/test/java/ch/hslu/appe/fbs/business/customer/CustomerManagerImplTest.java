@@ -7,11 +7,11 @@ import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.data.customer.CustomerPersistor;
 import ch.hslu.appe.fbs.data.userrole.UserRoles;
 import ch.hslu.appe.fbs.model.db.Customer;
-import ch.hslu.appe.fbs.wrapper.CustomerWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -20,7 +20,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
 
 @RunWith(MockitoJUnitRunner.class)
 public final class CustomerManagerImplTest {
@@ -81,6 +83,36 @@ public final class CustomerManagerImplTest {
         this.customerManager.getCustomer(customerToFind.getId(), this.userTestee);
     }
 
+    @Test
+    public void createCustomer_WhenNewCustomer_ThenCreateIt() throws UserNotAuthorisedException {
+        final CustomerDTO customerDTOTestee = getCreateCustomerDTOTestee();
+
+        doAnswer(invocationOnMock -> {
+            final Customer customer = invocationOnMock.getArgument(0);
+            this.customerTestees.add(customer);
+
+            assertEquals(customerDTOTestee.getId(), customer.getId().intValue());
+            assertEquals(customerDTOTestee.getPrename(), customer.getPrename());
+            assertEquals(customerDTOTestee.getSurname(), customer.getSurname());
+            assertEquals(customerDTOTestee.getPlz(), customer.getPlz().intValue());
+            assertEquals(customerDTOTestee.getAddress(), customer.getAdress());
+            assertEquals(customerDTOTestee.getCity(), customer.getCity());
+
+            return null;
+        }).when(this.customerPersistor).save(any(Customer.class));
+
+        final int oldSizeCustomerTestees = this.customerTestees.size();
+        this.customerManager.createCustomer(customerDTOTestee, this.userTestee);
+
+        assertEquals(oldSizeCustomerTestees + 1, this.customerTestees.size());
+    }
+
+    @Test(expected = UserNotAuthorisedException.class)
+    public void createCustomer_WhenCreateCustomerButUserNotAuthorized_ThrowException() throws UserNotAuthorisedException {
+        final CustomerDTO customerDTOTestee = getCreateCustomerDTOTestee();
+        this.customerManager.createCustomer(customerDTOTestee, this.userNotAuthorizedTestee);
+    }
+
     private UserDTO getUserTestee() {
         final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SALESPERSON.getRole());
         return new UserDTO(1, userRoleDTO, "maxmuster");
@@ -89,6 +121,10 @@ public final class CustomerManagerImplTest {
     private UserDTO getNotAuthorizedUserTestee() {
         final UserRoleDTO userRoleDTO = new UserRoleDTO(2, UserRoles.BRANCHMANAGER.getRole());
         return new UserDTO(2, userRoleDTO, "fritzmeier");
+    }
+
+    private CustomerDTO getCreateCustomerDTOTestee() {
+        return new CustomerDTO(1, "Max", "Muster", 6210, "Sursee", "Bahnhofstrasse 5");
     }
 
     private List<Customer> getCustomerTestees() {

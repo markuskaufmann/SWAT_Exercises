@@ -28,6 +28,8 @@ public class OrderManagerImpl implements OrderManager {
 
     private static final Object LOCK = new Object();
 
+    private static final String ERROR_NULL_OBJ_REFERENCE = "object reference can't be null";
+
     private final OrderPersistor orderPersistor;
     private final OrderItemPersistor orderItemPersistor;
     private final OrderStatePersistor orderStatePersistor;
@@ -68,7 +70,7 @@ public class OrderManagerImpl implements OrderManager {
     @Override
     public List<OrderDTO> getOrdersByOrderState(int customerId, OrderStateDTO orderState, UserDTO userDTO) throws UserNotAuthorisedException {
         if (orderState == null) {
-            throw new IllegalArgumentException("object reference can't be null");
+            throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ORDER);
         synchronized (LOCK) {
@@ -82,7 +84,7 @@ public class OrderManagerImpl implements OrderManager {
     @Override
     public void createOrder(OrderDTO order, UserDTO userDTO) throws UserNotAuthorisedException {
         if (order == null) {
-            throw new IllegalArgumentException("object reference can't be null");
+            throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.CREATE_ORDER);
         synchronized (LOCK) {
@@ -110,7 +112,7 @@ public class OrderManagerImpl implements OrderManager {
     @Override
     public void cancelOrder(OrderDTO order, UserDTO userDTO) throws UserNotAuthorisedException {
         if (order == null) {
-            throw new IllegalArgumentException("object reference can't be null");
+            throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.CANCEL_ORDER);
         synchronized (LOCK) {
@@ -130,21 +132,21 @@ public class OrderManagerImpl implements OrderManager {
     @Override
     public void updateOrder(OrderDTO order, UserDTO userDTO) throws UserNotAuthorisedException {
         if (order == null) {
-            throw new IllegalArgumentException("object reference can't be null");
+            throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.EDIT_ORDER);
         synchronized (LOCK) {
             final Order persOrder = this.orderWrapper.entityFromDTO(order);
             final Optional<Order> oldOrder = this.orderPersistor.getById(persOrder.getId());
             if (oldOrder.isPresent()) {
-                OrderDTO orderDTO = this.orderWrapper.dtoFromEntity(oldOrder.get());
-                Optional<OrderState> optOrderState = this.orderStatePersistor.getByState(OrderStates.CANCELLED.getState());
-                if (optOrderState.isPresent()) {
-                    if (oldOrder.get().getOrderStateByOrderState().equals(optOrderState.get())) {
+                final OrderDTO orderDTO = this.orderWrapper.dtoFromEntity(oldOrder.get());
+                final Optional<OrderState> optOrderState = this.orderStatePersistor.getByState(OrderStates.CANCELLED.getState());
+                optOrderState.ifPresent(orderState -> {
+                    if(oldOrder.get().getOrderStateByOrderState().equals(orderState)) {
                         orderDTO.getOrderItems().forEach(orderItemDTO ->
                                 this.itemManager.refillItemStock(orderItemDTO.getItemByItemId(), orderItemDTO.getQuantity()));
                     }
-                }
+                });
             }
             order.getOrderItems().forEach(orderItemDTO ->
                     this.itemManager.updateItemStock(orderItemDTO.getItemByItemId(), orderItemDTO.getQuantity()));

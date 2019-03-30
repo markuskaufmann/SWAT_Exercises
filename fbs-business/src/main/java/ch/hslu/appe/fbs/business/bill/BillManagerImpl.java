@@ -14,9 +14,7 @@ import ch.hslu.appe.fbs.model.db.Reminder;
 import ch.hslu.appe.fbs.wrapper.BillWrapper;
 import ch.hslu.appe.fbs.wrapper.OrderWrapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public final class BillManagerImpl implements BillManager {
 
@@ -113,7 +111,16 @@ public final class BillManagerImpl implements BillManager {
         for (Bill bill : this.billPersistor.getAll()) {
             Order orderByOrderId = bill.getOrderByOrderId();
             if (orderByOrderId.getCustomerId() == customerId) {
-                orders.add(this.orderWrapper.dtoFromEntity(orderByOrderId));
+                boolean alreadyInList = false;
+                for(OrderDTO orderDTO : orders) {
+                    if(orderDTO.getId() == orderByOrderId.getId()) {
+                        alreadyInList = true;
+                        break;
+                    }
+                }
+                if(!alreadyInList) {
+                    orders.add(this.orderWrapper.dtoFromEntity(orderByOrderId));
+                }
             }
         }
         return orders;

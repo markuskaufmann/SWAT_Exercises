@@ -24,6 +24,9 @@ public class ItemManagerImpl implements ItemManager {
 
     private static final Object LOCK = new Object();
 
+    private static final String ERROR_NULL_OBJ_REFERENCE = "object reference can't be null";
+    private static final String ERROR_INVALID_QUANTITY = "quantity has to be >= 1";
+
     private final ItemPersistor itemPersistor;
     private final ItemWrapper itemWrapper;
     private final ReorderPersistor reorderPersistor;
@@ -50,10 +53,10 @@ public class ItemManagerImpl implements ItemManager {
     @Override
     public void updateItemStock(ItemDTO itemDTO, int quantity) {
         if (itemDTO == null) {
-            throw new IllegalArgumentException("object reference can't be null");
+            throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
         if (quantity < 1) {
-            throw new IllegalArgumentException("quantity has to be >= 1");
+            throw new IllegalArgumentException(ERROR_INVALID_QUANTITY);
         }
         synchronized (LOCK) {
             final Item item = this.itemWrapper.entityFromDTO(itemDTO);
@@ -73,7 +76,7 @@ public class ItemManagerImpl implements ItemManager {
     @Override
     public void updateMinLocalStock(ItemDTO itemDTO, int newMinLocalStock) {
         if (itemDTO == null) {
-            throw new IllegalArgumentException("object reference can't be null");
+            throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
         if (newMinLocalStock < 1) {
             throw new IllegalArgumentException("minimum local stock has to be >= 1");
@@ -103,10 +106,10 @@ public class ItemManagerImpl implements ItemManager {
     @Override
     public void refillItemStock(ItemDTO itemDTO, int quantity) {
         if (itemDTO == null) {
-            throw new IllegalArgumentException("object reference can't be null");
+            throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
         if (quantity < 1) {
-            throw new IllegalArgumentException("quantity has to be >= 1");
+            throw new IllegalArgumentException(ERROR_INVALID_QUANTITY);
         }
         synchronized (LOCK) {
             Optional<Item> itemById = this.itemPersistor.getItemById(itemDTO.getId());
@@ -137,7 +140,7 @@ public class ItemManagerImpl implements ItemManager {
     @Override
     public void reorderItem(int itemId, int quantity) throws StockException {
         if (quantity < 1) {
-            throw new IllegalArgumentException("quantity has to be >= 1");
+            throw new IllegalArgumentException(ERROR_INVALID_QUANTITY);
         }
         synchronized (LOCK) {
             final Timestamp now = new Timestamp(new Date().getTime());
