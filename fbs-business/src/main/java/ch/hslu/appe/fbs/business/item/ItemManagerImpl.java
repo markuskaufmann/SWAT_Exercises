@@ -15,8 +15,8 @@ import ch.hslu.appe.fbs.model.db.Reorder;
 import ch.hslu.appe.fbs.wrapper.ItemWrapper;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,13 +143,18 @@ public class ItemManagerImpl implements ItemManager {
             throw new IllegalArgumentException(ERROR_INVALID_QUANTITY);
         }
         synchronized (LOCK) {
-            final Timestamp now = new Timestamp(new Date().getTime());
-            final Reorder reorder = new Reorder();
-            reorder.setItemId(itemId);
-            reorder.setQuantity(quantity);
-            reorder.setReorderDate(now);
-            this.reorderPersistor.save(reorder);
-            this.centralStock.orderItem(reorder.getItemByItemId().getArtNr(), quantity);
+            final Optional<Item> optItem = this.itemPersistor.getItemById(itemId);
+            if(optItem.isPresent()) {
+                final Item item = optItem.get();
+                final Reorder reorder = new Reorder();
+                reorder.setItemId(itemId);
+                reorder.setQuantity(quantity);
+                reorder.setReorderDate(Timestamp.from(Instant.now()));
+                this.reorderPersistor.save(reorder);
+                this.centralStock.orderItem(item.getArtNr(), quantity);
+            } else {
+                throw new IllegalArgumentException("No item with id '" + itemId + "' found!");
+            }
         }
     }
 
@@ -157,7 +162,7 @@ public class ItemManagerImpl implements ItemManager {
         Optional<Item> optItem = this.itemPersistor.getItemById(itemId);
         if(optItem.isPresent()){
             Item item = optItem.get();
-            List<Reorder> reorders = reorderPersistor.getByItemId(itemId);
+            List<Reorder> reorders = this.reorderPersistor.getByItemId(itemId);
             int reorderedQuantity = 0;
             for (Reorder reorder : reorders) {
                 if(reorder.getDelivered() == null) {
