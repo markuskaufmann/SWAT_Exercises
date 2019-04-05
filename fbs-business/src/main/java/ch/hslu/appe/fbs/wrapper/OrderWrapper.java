@@ -3,9 +3,11 @@ package ch.hslu.appe.fbs.wrapper;
 import ch.hslu.appe.fbs.common.dto.OrderDTO;
 import ch.hslu.appe.fbs.common.dto.OrderItemDTO;
 import ch.hslu.appe.fbs.model.db.Order;
+import ch.hslu.appe.fbs.model.db.OrderItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public final class OrderWrapper implements Wrappable<Order, OrderDTO> {
 
@@ -48,6 +50,13 @@ public final class OrderWrapper implements Wrappable<Order, OrderDTO> {
         order.setCustomerId(orderDTO.getCustomer().getId());
         order.setOrderState(orderDTO.getOrderState().getId());
         order.setDateTime(orderDTO.getDateTime());
+
+        final List<OrderItem> orderItems = new ArrayList<>();
+        for(final OrderItemDTO orderItemDTO : orderDTO.getOrderItems()) {
+            orderItems.add(this.orderItemWrapper.entityFromDTO(orderItemDTO));
+        }
+        order.setOrderItemsById(orderItems);
+
         return order;
     }
 }

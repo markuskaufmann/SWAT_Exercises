@@ -51,6 +51,6 @@ public final class AuthorisationManager {
         }
         final String userRole = userDTO.getUserRole().getUserRole();
         final List<UserPermissions> userPermissions = PERMISSIONS.get(userRole);
-        return userPermissions.contains(userPermission) || userPermissions.contains(UserPermissions.ADMIN);
+        return (userPermissions != null) && (userPermissions.contains(userPermission) || userPermissions.contains(UserPermissions.ADMIN));
     }
 }

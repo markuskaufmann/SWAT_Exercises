@@ -102,6 +102,9 @@ public class OrderManagerImpl implements OrderManager {
             });
             persOrderItems.forEach(this.orderItemPersistor::save);
             final Bill bill = this.billManager.generateBill(persOrder.getId(), price.get());
+            if(persOrder.getBillsById() == null) {
+                persOrder.setBillsById(new ArrayList<>());
+            }
             persOrder.getBillsById().add(bill);
             this.orderPersistor.update(persOrder);
 
@@ -125,7 +128,7 @@ public class OrderManagerImpl implements OrderManager {
                 order.getOrderItems().forEach(orderItemDTO ->
                         this.itemManager.refillItemStock(orderItemDTO.getItemByItemId(), orderItemDTO.getQuantity()));
             }
-            Logger.logInfo(userDTO.getUserName(), "Canceled Order with Id: " + order.getId());
+            Logger.logInfo(userDTO.getUserName(), "Cancelled Order with Id: " + order.getId());
         }
     }
 
