@@ -19,7 +19,8 @@ public final class RmiClient implements ClientHost {
     private Optional<String> getRemoteHost() {
         try {
             final String remote = RemoteServer.getClientHost();
-            LOGGER.info("Remote (client) host: " + remote);
+            final String infoRemote = String.format("Remote (client) host: %s", remote);
+            LOGGER.info(infoRemote);
             return Optional.of(remote);
         } catch (ServerNotActiveException e) {
             LOGGER.error("Error while retrieving remote (client) host", e);

@@ -196,9 +196,20 @@ public final class CustomerServiceImplTest {
     public void cancelOrder_WhenValidOrderDTO_ThenCancelAssociatedOrder() throws RemoteException, UserNotAuthorisedException {
         final String expectedOrderState = OrderStates.CANCELLED.getState();
 
-        doNothing().when(this.orderManager).cancelOrder(any(OrderDTO.class), any(UserDTO.class));
+        doAnswer(invocationOnMock -> {
+            final OrderDTO orderToCancel = invocationOnMock.getArgument(0);
+            final OrderStateDTO stateCancelled = new OrderStateDTO(1, OrderStates.CANCELLED.getState());
+            final OrderDTO orderUpdate = new OrderDTO(orderToCancel.getId(), orderToCancel.getCustomer(), orderToCancel.getUser(),
+                    stateCancelled, orderToCancel.getDateTime(), orderToCancel.getOrderItems());
+
+            this.orderTestees.set(0, orderUpdate);
+
+            return null;
+        }).when(this.orderManager).cancelOrder(any(OrderDTO.class), any(UserDTO.class));
 
         this.customerService.cancelOrder(this.orderTestees.get(0));
+
+        assertEquals(expectedOrderState, this.orderTestees.get(0).getOrderState().getOrderState());
     }
 
     @Test(expected = IllegalArgumentException.class)
