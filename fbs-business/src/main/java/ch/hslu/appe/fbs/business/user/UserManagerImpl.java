@@ -28,10 +28,10 @@ public class UserManagerImpl implements UserManager {
         if (optionalUser.isPresent()) {
             final User user = optionalUser.get();
             if (user.getPassword().equals(password)) {
-                Logger.logInfo(user.getUserName(), "logged in successfully");
+                Logger.logInfo(getClass(), user.getUserName(), "Login successful");
                 return this.userWrapper.dtoFromEntity(user);
             } else {
-                Logger.logInfo(user.getUserName(), "failed to login");
+                Logger.logInfo(getClass(), user.getUserName(), "Login failed");
             }
         }
         throw new IllegalArgumentException();

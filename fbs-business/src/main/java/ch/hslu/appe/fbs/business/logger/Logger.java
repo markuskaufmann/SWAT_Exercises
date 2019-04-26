@@ -1,24 +1,23 @@
 package ch.hslu.appe.fbs.business.logger;
 
-
 import org.apache.logging.log4j.LogManager;
 
-public class Logger {
+public final class Logger {
 
     private static final org.apache.logging.log4j.Logger LOG = LogManager.getLogger(Logger.class);
 
     private Logger() {
     }
 
-    public static void logInfo(String username, String message) {
-        LOG.info(username + " - " + message);
+    public static void logInfo(final Class<?> sourceClass, final String authenticatedUser, final String messageToLog) {
+        LOG.info(constructLogString(sourceClass, authenticatedUser, messageToLog));
     }
 
-    public static void logWarning(String username, String message) {
-        LOG.warn(username + " - " + message);
+    public static void logError(final Class<?> sourceClass, final String authenticatedUser, final String messageToLog) {
+        LOG.error(constructLogString(sourceClass, authenticatedUser, messageToLog));
     }
 
-    public static void logError(String username, String message) {
-        LOG.error(username + " - " + message);
+    private static String constructLogString(final Class<?> sourceClass, final String authenticatedUser, final String messageToLog) {
+        return sourceClass.getName() + " (" + authenticatedUser + "): " + messageToLog;
     }
 }

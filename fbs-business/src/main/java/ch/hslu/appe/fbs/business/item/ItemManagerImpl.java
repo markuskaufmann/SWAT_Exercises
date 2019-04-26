@@ -69,7 +69,8 @@ public class ItemManagerImpl implements ItemManager {
             item.setVirtualLocalStock(virtualStock);
             this.itemPersistor.updateStock(item);
             reorderCheck(item.getId());
-            Logger.logInfo("", "Updated Item Stock of Item: " + item.getArtNr() + " to " + item.getLocalStock());
+            Logger.logInfo(getClass(), "",
+                    "Updated Item Stock of Item: " + item.getArtNr() + " to " + item.getLocalStock());
         }
     }
 
@@ -85,7 +86,8 @@ public class ItemManagerImpl implements ItemManager {
             final Item item = this.itemWrapper.entityFromDTO(itemDTO);
             item.setMinLocalStock(newMinLocalStock);
             this.itemPersistor.updateStock(item);
-            Logger.logInfo("", "Updated MinLocalStock of Item: " + item.getArtNr() + " to " + item.getMinLocalStock());
+            Logger.logInfo(getClass(), "",
+                    "Updated MinLocalStock of Item: " + item.getArtNr() + " to " + item.getMinLocalStock());
             if (newMinLocalStock > item.getLocalStock()) {
                 reorderCheck(item.getId());
             }
@@ -123,7 +125,8 @@ public class ItemManagerImpl implements ItemManager {
                 itemFromDB.setLocalStock(stock);
                 itemFromDB.setVirtualLocalStock(virtualStock);
                 this.itemPersistor.updateStock(itemFromDB);
-                Logger.logInfo("", "Refilled Item Stock of Item: " + itemDTO.getArtNr() + " to " + itemFromDB.getLocalStock());
+                Logger.logInfo(getClass(), "",
+                        "Refilled Item Stock of Item: " + itemDTO.getArtNr() + " to " + itemFromDB.getLocalStock());
             }
         }
     }
@@ -174,7 +177,7 @@ public class ItemManagerImpl implements ItemManager {
                 try {
                     this.reorderItem(itemId, reorderQuantity);
                 } catch (StockException e) {
-                    Logger.logError("Unknown User", e.getMessage());
+                    Logger.logError(getClass(), "Unknown User", e.getMessage());
                 }
             }
         }

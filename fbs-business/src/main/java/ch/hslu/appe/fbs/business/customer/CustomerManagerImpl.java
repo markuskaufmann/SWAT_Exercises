@@ -60,7 +60,8 @@ public class CustomerManagerImpl implements CustomerManager {
         synchronized (LOCK) {
             final Customer customer = this.customerWrapper.entityFromDTO(customerDTO);
             this.customerPersistor.save(customer);
-            Logger.logInfo(userDTO.getUserName(), "Created new customer: " + customer.getSurname() + " " + customer.getPrename());
+            Logger.logInfo(getClass(), userDTO.getUserName(),
+                    "Created new customer: " + customer.getSurname() + " " + customer.getPrename());
         }
     }
 }
