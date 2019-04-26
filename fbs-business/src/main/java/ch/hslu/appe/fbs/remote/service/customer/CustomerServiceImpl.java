@@ -12,10 +12,10 @@ import ch.hslu.appe.fbs.common.rmi.CustomerService;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
 import ch.hslu.appe.fbs.remote.rmi.ClientHost;
 import ch.hslu.appe.fbs.remote.session.UserSessionMap;
+import ch.hslu.appe.fbs.remote.session.UserSessionVerifier;
 
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Optional;
 
 public final class CustomerServiceImpl implements CustomerService {
 
@@ -100,11 +100,6 @@ public final class CustomerServiceImpl implements CustomerService {
     }
 
     private UserDTO getUserSession() {
-        final Optional<UserDTO> optUserDTO = this.userSessionMap.getUserSession(this.clientHost.getHostAddress());
-        if(optUserDTO.isPresent()) {
-            return optUserDTO.get();
-        } else {
-            throw new IllegalStateException("No valid user session found");
-        }
+        return UserSessionVerifier.getUserSession(this.userSessionMap, this.clientHost);
     }
 }

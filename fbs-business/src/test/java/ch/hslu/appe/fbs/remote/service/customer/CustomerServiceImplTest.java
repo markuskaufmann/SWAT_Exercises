@@ -225,8 +225,8 @@ public final class CustomerServiceImplTest {
 
     @Test
     public void getServiceName_WhenServiceNameExists_ThenReturnIt() throws RemoteException {
-        final String serviceName = RmiLookupTable.getCustomerServiceName();
-        assertNotNull(serviceName);
+        final String serviceName = this.customerService.getServiceName();
+        assertEquals(RmiLookupTable.getCustomerServiceName(), serviceName);
     }
 
     private UserDTO getUserTestee() {

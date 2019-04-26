@@ -8,11 +8,10 @@ import ch.hslu.appe.fbs.common.rmi.ItemService;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
 import ch.hslu.appe.fbs.remote.rmi.ClientHost;
 import ch.hslu.appe.fbs.remote.session.UserSessionMap;
+import ch.hslu.appe.fbs.remote.session.UserSessionVerifier;
 
 import java.rmi.RemoteException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public final class ItemServiceImpl implements ItemService {
 
@@ -29,15 +28,16 @@ public final class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDTO> getAllItems() throws RemoteException, UserNotAuthorisedException {
-        final Optional<UserDTO> optUserDTO = this.userSessionMap.getUserSession(this.clientHost.getHostAddress());
-        if(optUserDTO.isPresent()) {
-            return this.itemManager.getAllItems(optUserDTO.get());
-        }
-        return Collections.emptyList();
+        final UserDTO userDTO = getUserSession();
+        return this.itemManager.getAllItems(userDTO);
     }
 
     @Override
     public String getServiceName() throws RemoteException {
         return RmiLookupTable.getItemServiceName();
+    }
+
+    private UserDTO getUserSession() {
+        return UserSessionVerifier.getUserSession(this.userSessionMap, this.clientHost);
     }
 }
