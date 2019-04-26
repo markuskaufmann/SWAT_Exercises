@@ -38,13 +38,15 @@ public final class ReorderManagerImpl implements ReorderManager {
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.MARK_REORDER_DELIVERED);
         synchronized (LOCK) {
             Optional<Reorder> optionalReorder = this.reorderPersistor.getById(reorderId);
-            if (optionalReorder.isPresent()) {
-                final Reorder reorder = optionalReorder.get();
+            optionalReorder.ifPresent(reorder -> {
+                if(reorder.getDelivered() != null) {
+                    return;
+                }
                 reorder.setDelivered(new Timestamp(new Date().getTime()));
                 this.itemManager.refillItemStock(this.itemWrapper.dtoFromEntity(reorder.getItemByItemId()),
                         reorder.getQuantity());
                 this.reorderPersistor.save(reorder);
-            }
+            });
         }
     }
 
