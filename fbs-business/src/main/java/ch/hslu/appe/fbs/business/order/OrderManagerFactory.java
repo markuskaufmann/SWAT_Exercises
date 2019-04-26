@@ -6,16 +6,16 @@ import ch.hslu.appe.fbs.data.order.OrderPersistorFactory;
 import ch.hslu.appe.fbs.data.orderitem.OrderItemPersistorFactory;
 import ch.hslu.appe.fbs.data.orderstate.OrderStatePersistorFactory;
 
-public class OrderManagerFactory {
+public final class OrderManagerFactory {
 
     private OrderManagerFactory() {
     }
 
-    public static OrderManager getOrderManager() {
+    public static OrderManager createOrderManager() {
         return new OrderManagerImpl(OrderPersistorFactory.createOrderPersistor(),
                                     OrderItemPersistorFactory.createOrderItemPersistor(),
                                     OrderStatePersistorFactory.createOrderStatePersistor(),
-                                    ItemManagerFactory.getItemManager(),
-                                    BillManagerFactory.getBillManager());
+                                    ItemManagerFactory.createItemManager(),
+                                    BillManagerFactory.createBillManager());
     }
 }

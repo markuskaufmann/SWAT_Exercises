@@ -42,7 +42,7 @@ public final class BillManagerImpl implements BillManager {
     }
 
     @Override
-    public BillDTO getBillById(int billId) {
+    public BillDTO getBillById(final int billId) {
         synchronized (LOCK) {
             final Optional<Bill> bill = this.billPersistor.getById(billId);
             if (bill.isPresent()) {
@@ -53,7 +53,7 @@ public final class BillManagerImpl implements BillManager {
     }
 
     @Override
-    public List<BillDTO> getBillsByOrderId(int orderId) {
+    public List<BillDTO> getBillsByOrderId(final int orderId) {
         synchronized (LOCK) {
             final List<BillDTO> bills = new ArrayList<>();
             this.billPersistor.getByOrderId(orderId).forEach(bill -> bills.add(this.billWrapper.dtoFromEntity(bill)));
@@ -62,7 +62,7 @@ public final class BillManagerImpl implements BillManager {
     }
 
     @Override
-    public List<BillDTO> getBillsByCustomerId(int customerId) {
+    public List<BillDTO> getBillsByCustomerId(final int customerId) {
         synchronized (LOCK) {
             final List<BillDTO> bills = new ArrayList<>();
             final List<OrderDTO> orders = this.getOrdersByCustomerId(customerId);
@@ -72,7 +72,7 @@ public final class BillManagerImpl implements BillManager {
     }
 
     @Override
-    public List<BillDTO> getRemindedBillsByCustomerId(int customerId, UserDTO userDTO) throws UserNotAuthorisedException {
+    public List<BillDTO> getRemindedBillsByCustomerId(final int customerId, final UserDTO userDTO) throws UserNotAuthorisedException {
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_REMINDER);
         synchronized (LOCK) {
             final List<BillDTO> bills = new ArrayList<>();
@@ -83,7 +83,7 @@ public final class BillManagerImpl implements BillManager {
     }
 
     @Override
-    public List<BillDTO> getRemindedBillsByOrderId(int orderId) {
+    public List<BillDTO> getRemindedBillsByOrderId(final int orderId) {
         synchronized (LOCK) {
             final List<BillDTO> billsWithReminders = new ArrayList<>();
             this.billPersistor.getByOrderId(orderId).forEach(bill -> {
@@ -97,7 +97,7 @@ public final class BillManagerImpl implements BillManager {
     }
 
     @Override
-    public Bill generateBill(int orderId, int price) {
+    public Bill generateBill(final int orderId, final int price) {
         synchronized (LOCK) {
             final BillDTO billDTO = new BillDTO(-1, orderId, price);
             final Bill bill = this.billWrapper.entityFromDTO(billDTO);
@@ -106,7 +106,7 @@ public final class BillManagerImpl implements BillManager {
         }
     }
 
-    private List<OrderDTO> getOrdersByCustomerId(int customerId) {
+    private List<OrderDTO> getOrdersByCustomerId(final int customerId) {
         final List<OrderDTO> orders = new ArrayList<>();
         for (Bill bill : this.billPersistor.getAll()) {
             Order orderByOrderId = bill.getOrderByOrderId();

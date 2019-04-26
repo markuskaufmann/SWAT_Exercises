@@ -8,7 +8,7 @@ public final class BillManagerFactory {
     private BillManagerFactory() {
     }
 
-    public static BillManager getBillManager() {
+    public static BillManager createBillManager() {
         return new BillManagerImpl(BillPersistorFactory.createBillPersistor(), ReminderPersistorFactory.createReminderPersistor());
     }
 }

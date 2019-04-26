@@ -8,7 +8,7 @@ import ch.hslu.appe.fbs.wrapper.UserWrapper;
 
 import java.util.Optional;
 
-public class UserManagerImpl implements UserManager {
+public final class UserManagerImpl implements UserManager {
 
     private final UserPersistor userPersistor;
     private UserWrapper userWrapper;
@@ -19,7 +19,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public UserDTO loginUser(String name, String password) {
+    public UserDTO loginUser(final String name, final String password) {
         if (name == null || name.trim().length() == 0) {
             throw new IllegalArgumentException("user name can be neither a null reference nor an empty string");
         }

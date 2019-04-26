@@ -10,14 +10,16 @@ public final class Logger {
     }
 
     public static void logInfo(final Class<?> sourceClass, final String authenticatedUser, final String messageToLog) {
-        LOG.info(constructLogString(sourceClass, authenticatedUser, messageToLog));
+        final String message = constructLogMessage(sourceClass, authenticatedUser, messageToLog);
+        LOG.info(message);
     }
 
     public static void logError(final Class<?> sourceClass, final String authenticatedUser, final String messageToLog) {
-        LOG.error(constructLogString(sourceClass, authenticatedUser, messageToLog));
+        final String message = constructLogMessage(sourceClass, authenticatedUser, messageToLog);
+        LOG.error(message);
     }
 
-    private static String constructLogString(final Class<?> sourceClass, final String authenticatedUser, final String messageToLog) {
+    private static String constructLogMessage(final Class<?> sourceClass, final String authenticatedUser, final String messageToLog) {
         return sourceClass.getName() + " (" + authenticatedUser + "): " + messageToLog;
     }
 }

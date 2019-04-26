@@ -6,44 +6,52 @@ import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
 import ch.hslu.appe.fbs.common.rmi.UserService;
-import ch.hslu.appe.fbs.remote.session.UserSessionDictionary;
+import ch.hslu.appe.fbs.remote.rmi.ClientHost;
+import ch.hslu.appe.fbs.remote.session.UserSessionMap;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-public class UserServiceImpl implements UserService {
+public final class UserServiceImpl implements UserService {
+
+    private final ClientHost clientHost;
+    private final UserSessionMap userSessionMap;
 
     private final UserManager userManager;
 
-    public UserServiceImpl(final UserManager userManager) {
-        super();
+    public UserServiceImpl(final ClientHost clientHost, final UserSessionMap userSessionMap, final UserManager userManager) {
+        this.clientHost = clientHost;
+        this.userSessionMap = userSessionMap;
         this.userManager = userManager;
     }
 
     @Override
-    public UserDTO performLogin(String name, String password) throws IllegalArgumentException, RemoteException {
+    public UserDTO performLogin(final String name, final String password) throws RemoteException {
         final UserDTO userDTO = this.userManager.loginUser(name, password);
-        UserSessionDictionary.addUserSession(userDTO);
+        this.userSessionMap.addUserSession(this.clientHost.getHostAddress(), userDTO);
         return userDTO;
     }
 
     @Override
     public void performLogout() throws RemoteException {
-        UserSessionDictionary.removeUserSession();
+        this.userSessionMap.removeUserSession(this.clientHost.getHostAddress());
     }
 
     @Override
-    public Map<UserPermissions, Boolean> checkUserPermissions(UserPermissions... userPermissions) {
+    public Map<UserPermissions, Boolean> checkUserPermissions(final UserPermissions... userPermissions) {
         if (userPermissions == null) {
             throw new IllegalArgumentException("The specified permissions can't be a null reference");
         }
-        final UserDTO userDTO = UserSessionDictionary.getUserSession();
+        final Optional<UserDTO> optUserDTO = this.userSessionMap.getUserSession(this.clientHost.getHostAddress());
         final Map<UserPermissions, Boolean> permissionMap = new HashMap<>();
-        for (UserPermissions userPermission : userPermissions) {
-            final boolean permissionGranted = AuthorisationManager.checkUserPermission(userDTO, userPermission);
-            permissionMap.put(userPermission, permissionGranted);
-        }
+        optUserDTO.ifPresent(userDTO -> {
+            for (UserPermissions userPermission : userPermissions) {
+                final boolean permissionGranted = AuthorisationManager.checkUserPermission(optUserDTO.get(), userPermission);
+                permissionMap.put(userPermission, permissionGranted);
+            }
+        });
         return permissionMap;
     }
 

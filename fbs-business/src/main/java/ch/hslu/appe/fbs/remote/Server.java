@@ -7,14 +7,16 @@ import ch.hslu.appe.fbs.business.order.OrderManagerFactory;
 import ch.hslu.appe.fbs.business.reorder.ReorderManagerFactory;
 import ch.hslu.appe.fbs.business.user.UserManagerFactory;
 import ch.hslu.appe.fbs.common.rmi.*;
-import ch.hslu.appe.fbs.remote.service.customer.CustomerServiceFactory;
-import ch.hslu.appe.fbs.remote.service.item.ItemServiceFactory;
-import ch.hslu.appe.fbs.remote.service.reorder.ReorderServiceFactory;
 import ch.hslu.appe.fbs.remote.rmi.RmiConnector;
 import ch.hslu.appe.fbs.remote.rmi.RmiServiceRegistry;
 import ch.hslu.appe.fbs.remote.rmi.ServiceConnector;
 import ch.hslu.appe.fbs.remote.rmi.ServiceRegistry;
+import ch.hslu.appe.fbs.remote.service.customer.CustomerServiceFactory;
+import ch.hslu.appe.fbs.remote.service.item.ItemServiceFactory;
+import ch.hslu.appe.fbs.remote.service.reorder.ReorderServiceFactory;
 import ch.hslu.appe.fbs.remote.service.user.UserServiceFactory;
+import ch.hslu.appe.fbs.remote.session.UserSessionMap;
+import ch.hslu.appe.fbs.remote.session.UserSessionMapFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,7 +40,7 @@ public final class Server {
         final ServiceConnector serviceConnector = new RmiConnector(RMI_HOST, RMI_PORT);
         final Map<FBSService, Boolean> serviceMap = serviceConnector.bindServicesToRegistry(rmiServiceRegistry);
         final boolean bindResult = verifyBindResult(serviceMap);
-        if(bindResult) {
+        if (bindResult) {
             LOGGER.info("All services successfully bound.");
         } else {
             LOGGER.error("There were some errors while binding the specific services to the registry. Shutting down...");
@@ -47,24 +49,27 @@ public final class Server {
     }
 
     private static ServiceRegistry setUpRmiServiceRegistry() {
-        final UserService userService = UserServiceFactory.createUserService(UserManagerFactory.getUserManager());
-        final CustomerService customerService = CustomerServiceFactory.createCustomerService(CustomerManagerFactory.getCustomerManager(),
-                                                                                             OrderManagerFactory.getOrderManager(),
-                                                                                             BillManagerFactory.getBillManager());
-        final ItemService itemService = ItemServiceFactory.createItemService(ItemManagerFactory.getItemManager());
-        final ReorderService reorderService = ReorderServiceFactory.createReorderService(ReorderManagerFactory.getReorderManager());
+        final UserSessionMap userSessionMap = UserSessionMapFactory.createUserSessionMap();
+        final UserService userService = UserServiceFactory.createUserService(userSessionMap, UserManagerFactory.createUserManager());
+        final CustomerService customerService = CustomerServiceFactory.createCustomerService(userSessionMap,
+                CustomerManagerFactory.createCustomerManager(),
+                OrderManagerFactory.createOrderManager(),
+                BillManagerFactory.createBillManager());
+        final ItemService itemService = ItemServiceFactory.createItemService(userSessionMap, ItemManagerFactory.createItemManager());
+        final ReorderService reorderService = ReorderServiceFactory.createReorderService(userSessionMap,
+                ReorderManagerFactory.createReorderManager());
         return new RmiServiceRegistry(userService, customerService, itemService, reorderService);
     }
 
     private static boolean verifyBindResult(final Map<FBSService, Boolean> serviceMap) {
-        if(serviceMap == null || serviceMap.isEmpty()) {
+        if (serviceMap == null || serviceMap.isEmpty()) {
             return false;
         }
-        for(Map.Entry<FBSService, Boolean> serviceEntry : serviceMap.entrySet()) {
+        for (Map.Entry<FBSService, Boolean> serviceEntry : serviceMap.entrySet()) {
             try {
                 final boolean bindResult = serviceEntry.getValue();
                 LOGGER.info("BindResult " + serviceEntry.getKey().getServiceName() + ": " + bindResult);
-                if(!bindResult) {
+                if (!bindResult) {
                     return false;
                 }
             } catch (RemoteException e) {

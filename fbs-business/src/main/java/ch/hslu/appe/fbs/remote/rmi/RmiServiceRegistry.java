@@ -5,7 +5,7 @@ import ch.hslu.appe.fbs.common.rmi.ItemService;
 import ch.hslu.appe.fbs.common.rmi.ReorderService;
 import ch.hslu.appe.fbs.common.rmi.UserService;
 
-public class RmiServiceRegistry implements ServiceRegistry {
+public final class RmiServiceRegistry implements ServiceRegistry {
 
     private final UserService userService;
     private final CustomerService customerService;

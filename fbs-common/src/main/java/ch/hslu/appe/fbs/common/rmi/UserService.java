@@ -17,7 +17,7 @@ public interface UserService extends FBSService {
      * @throws IllegalArgumentException In case the specified name is null, empty or there's no user with the specified name
      * @throws RemoteException In case of an connection-specific issue
      */
-    UserDTO performLogin(String name, String password) throws IllegalArgumentException, RemoteException;
+    UserDTO performLogin(String name, String password) throws RemoteException;
 
     /***
      * Service to perform a logout.

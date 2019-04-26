@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class OrderManagerImpl implements OrderManager {
+public final class OrderManagerImpl implements OrderManager {
 
     private static final Object LOCK = new Object();
 
@@ -53,7 +53,7 @@ public class OrderManagerImpl implements OrderManager {
     }
 
     @Override
-    public List<OrderDTO> getOrders(int customerId, UserDTO userDTO) throws UserNotAuthorisedException {
+    public List<OrderDTO> getOrders(final int customerId, final UserDTO userDTO) throws UserNotAuthorisedException {
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ORDER);
         synchronized (LOCK) {
             List<OrderDTO> orders = new ArrayList<>();
@@ -63,12 +63,12 @@ public class OrderManagerImpl implements OrderManager {
     }
 
     @Override
-    public List<OrderDTO> getOrders(CustomerDTO customer, UserDTO userDTO) throws UserNotAuthorisedException {
+    public List<OrderDTO> getOrders(final CustomerDTO customer, final UserDTO userDTO) throws UserNotAuthorisedException {
         return this.getOrders(customer.getId(), userDTO);
     }
 
     @Override
-    public List<OrderDTO> getOrdersByOrderState(int customerId, OrderStateDTO orderState, UserDTO userDTO) throws UserNotAuthorisedException {
+    public List<OrderDTO> getOrdersByOrderState(final int customerId, final OrderStateDTO orderState, final UserDTO userDTO) throws UserNotAuthorisedException {
         if (orderState == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
@@ -82,7 +82,7 @@ public class OrderManagerImpl implements OrderManager {
     }
 
     @Override
-    public void createOrder(OrderDTO order, UserDTO userDTO) throws UserNotAuthorisedException {
+    public void createOrder(final OrderDTO order, final UserDTO userDTO) throws UserNotAuthorisedException {
         if (order == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
@@ -113,7 +113,7 @@ public class OrderManagerImpl implements OrderManager {
     }
 
     @Override
-    public void cancelOrder(OrderDTO order, UserDTO userDTO) throws UserNotAuthorisedException {
+    public void cancelOrder(final OrderDTO order, final UserDTO userDTO) throws UserNotAuthorisedException {
         if (order == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
@@ -133,7 +133,7 @@ public class OrderManagerImpl implements OrderManager {
     }
 
     @Override
-    public void updateOrder(OrderDTO order, UserDTO userDTO) throws UserNotAuthorisedException {
+    public void updateOrder(final OrderDTO order, final UserDTO userDTO) throws UserNotAuthorisedException {
         if (order == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
@@ -158,7 +158,7 @@ public class OrderManagerImpl implements OrderManager {
     }
 
     @Override
-    public List<OrderDTO> getAllOrders(UserDTO userDTO) throws UserNotAuthorisedException {
+    public List<OrderDTO> getAllOrders(final UserDTO userDTO) throws UserNotAuthorisedException {
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ALL_ORDERS);
         List<OrderDTO> orders = new ArrayList<>();
         synchronized (LOCK) {

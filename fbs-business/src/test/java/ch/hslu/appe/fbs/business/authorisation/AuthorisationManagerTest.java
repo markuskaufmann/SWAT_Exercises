@@ -48,6 +48,15 @@ public final class AuthorisationManagerTest {
     }
 
     @Test
+    public void checkUserPermission_WhenUserIsAdmin_ThenAlwaysReturnTrue() {
+        final UserDTO admin = getAdminTestee();
+        for(final UserPermissions permission : UserPermissions.values()) {
+            final boolean isAuthorized = AuthorisationManager.checkUserPermission(admin, permission);
+            assertTrue(isAuthorized);
+        }
+    }
+
+    @Test
     public void checkUserAuthorisation_WhenUserHasPermission_ThenDoNothing() throws UserNotAuthorisedException {
         final UserDTO authorizedUser = getUserTestee(UserRoles.SALESPERSON);
         AuthorisationManager.checkUserAuthorisation(authorizedUser, UserPermissions.CREATE_CUSTOMER);
@@ -76,9 +85,22 @@ public final class AuthorisationManagerTest {
         AuthorisationManager.checkUserAuthorisation(authorizedUser, null);
     }
 
+    @Test
+    public void checkUserAuthorisation_WhenUserIsAdmin_ThenAlwaysReturnTrue() throws UserNotAuthorisedException {
+        final UserDTO admin = getAdminTestee();
+        for(final UserPermissions permission : UserPermissions.values()) {
+            AuthorisationManager.checkUserAuthorisation(admin, permission);
+        }
+    }
+
     private UserDTO getUserTestee(final UserRoles userRole) {
         final UserRoleDTO userRoleDTO = new UserRoleDTO(1, userRole.getRole());
         return new UserDTO(1, userRoleDTO, "maxmuster");
+    }
+
+    private UserDTO getAdminTestee() {
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSADMIN.getRole());
+        return new UserDTO(1, userRoleDTO, "Admin");
     }
 
     private UserDTO getUnauthorizedUserTestee() {

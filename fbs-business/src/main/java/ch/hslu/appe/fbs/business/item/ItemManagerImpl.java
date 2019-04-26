@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemManagerImpl implements ItemManager {
+public final class ItemManagerImpl implements ItemManager {
 
     private static final Object LOCK = new Object();
 
@@ -41,7 +41,7 @@ public class ItemManagerImpl implements ItemManager {
 
 
     @Override
-    public List<ItemDTO> getAllItems(UserDTO userDTO) throws UserNotAuthorisedException {
+    public List<ItemDTO> getAllItems(final UserDTO userDTO) throws UserNotAuthorisedException {
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ALL_ITEMS);
         synchronized (LOCK) {
             List<ItemDTO> itemDTOS = new ArrayList<>();
@@ -51,7 +51,7 @@ public class ItemManagerImpl implements ItemManager {
     }
 
     @Override
-    public void updateItemStock(ItemDTO itemDTO, int quantity) {
+    public void updateItemStock(final ItemDTO itemDTO, final int quantity) {
         if (itemDTO == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
@@ -75,7 +75,7 @@ public class ItemManagerImpl implements ItemManager {
     }
 
     @Override
-    public void updateMinLocalStock(ItemDTO itemDTO, int newMinLocalStock) {
+    public void updateMinLocalStock(final ItemDTO itemDTO, final int newMinLocalStock) {
         if (itemDTO == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
@@ -95,7 +95,7 @@ public class ItemManagerImpl implements ItemManager {
     }
 
     @Override
-    public int getAvailableItemQuantity(int id) {
+    public int getAvailableItemQuantity(final int id) {
         synchronized (LOCK) {
             Optional<Item> item = this.itemPersistor.getItemById(id);
             if (item.isPresent()) {
@@ -106,7 +106,7 @@ public class ItemManagerImpl implements ItemManager {
     }
 
     @Override
-    public void refillItemStock(ItemDTO itemDTO, int quantity) {
+    public void refillItemStock(final ItemDTO itemDTO, final int quantity) {
         if (itemDTO == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
@@ -132,7 +132,7 @@ public class ItemManagerImpl implements ItemManager {
     }
 
     @Override
-    public ItemDTO getItem(int itemId) {
+    public ItemDTO getItem(final int itemId) {
         Optional<Item> itemById = this.itemPersistor.getItemById(itemId);
         if (itemById.isPresent()) {
             return this.itemWrapper.dtoFromEntity(itemById.get());
@@ -141,7 +141,7 @@ public class ItemManagerImpl implements ItemManager {
     }
 
     @Override
-    public void reorderItem(int itemId, int quantity) throws StockException {
+    public void reorderItem(final int itemId, final int quantity) throws StockException {
         if (quantity < 1) {
             throw new IllegalArgumentException(ERROR_INVALID_QUANTITY);
         }
@@ -161,7 +161,7 @@ public class ItemManagerImpl implements ItemManager {
         }
     }
 
-    private void reorderCheck(int itemId) {
+    private void reorderCheck(final int itemId) {
         Optional<Item> optItem = this.itemPersistor.getItemById(itemId);
         if(optItem.isPresent()){
             Item item = optItem.get();

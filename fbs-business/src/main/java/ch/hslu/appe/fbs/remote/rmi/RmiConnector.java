@@ -39,7 +39,7 @@ public final class RmiConnector implements ServiceConnector {
             LOGGER.error("The registry wasn't set up properly. Cancel startup process...");
             return serviceMap;
         }
-        for(Map.Entry<FBSService, Boolean> serviceEntry : serviceMap.entrySet()) {
+        for(final Map.Entry<FBSService, Boolean> serviceEntry : serviceMap.entrySet()) {
             try {
                 bindServiceToRegistry(serviceEntry.getKey());
                 serviceEntry.setValue(true);

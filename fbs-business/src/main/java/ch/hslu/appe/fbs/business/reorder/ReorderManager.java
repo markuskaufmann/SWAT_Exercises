@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface ReorderManager {
     void markReorderAsDelivered(final int reorderId, final UserDTO userDTO) throws UserNotAuthorisedException;
-
     List<ReorderDTO> getAllReorders(final UserDTO userDTO) throws UserNotAuthorisedException;
 }

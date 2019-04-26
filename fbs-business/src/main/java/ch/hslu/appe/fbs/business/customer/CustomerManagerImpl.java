@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerManagerImpl implements CustomerManager {
+public final class CustomerManagerImpl implements CustomerManager {
 
     private static final Object LOCK = new Object();
 
@@ -27,7 +27,7 @@ public class CustomerManagerImpl implements CustomerManager {
     }
 
     @Override
-    public List<CustomerDTO> getAllCustomers(UserDTO userDTO) throws UserNotAuthorisedException {
+    public List<CustomerDTO> getAllCustomers(final UserDTO userDTO) throws UserNotAuthorisedException {
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ALL_CUSTOMERS);
         synchronized (LOCK) {
             List<CustomerDTO> customers = new ArrayList<>();
@@ -37,7 +37,7 @@ public class CustomerManagerImpl implements CustomerManager {
     }
 
     @Override
-    public CustomerDTO getCustomer(int customerId, UserDTO userDTO) throws UserNotAuthorisedException {
+    public CustomerDTO getCustomer(final int customerId, final UserDTO userDTO) throws UserNotAuthorisedException {
         AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_CUSTOMER);
         synchronized (LOCK) {
             Optional<Customer> customer = this.customerPersistor.getById(customerId);
@@ -49,7 +49,7 @@ public class CustomerManagerImpl implements CustomerManager {
     }
 
     @Override
-    public void createCustomer(CustomerDTO customerDTO, UserDTO userDTO) throws UserNotAuthorisedException {
+    public void createCustomer(final CustomerDTO customerDTO, final UserDTO userDTO) throws UserNotAuthorisedException {
         if (customerDTO == null) {
             throw new IllegalArgumentException("customer reference can't be null");
         }

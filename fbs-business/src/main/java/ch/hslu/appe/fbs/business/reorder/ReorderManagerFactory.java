@@ -8,7 +8,7 @@ public final class ReorderManagerFactory {
     private ReorderManagerFactory() {
     }
 
-    public static ReorderManager getReorderManager() {
-        return new ReorderManagerImpl(ReorderPersistorFactory.createReorderPersistor(), ItemManagerFactory.getItemManager());
+    public static ReorderManager createReorderManager() {
+        return new ReorderManagerImpl(ReorderPersistorFactory.createReorderPersistor(), ItemManagerFactory.createItemManager());
     }
 }
