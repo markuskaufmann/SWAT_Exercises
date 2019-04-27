@@ -32,7 +32,7 @@ public final class UserManagerImplTest {
         MockitoAnnotations.initMocks(this);
         this.userManager = new UserManagerImpl(this.userPersistor);
         this.testee = getUserTestee();
-        when(this.userPersistor.getByName("maxmuster")).thenReturn(Optional.of(testee));
+        when(this.userPersistor.getByName("maxmuster")).thenReturn(Optional.of(this.testee));
     }
 
     @Test
@@ -47,18 +47,28 @@ public final class UserManagerImplTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void loginUser_WhenUsernameNotMatching_ThenIllegalArgumentException() {
+    public void loginUser_WhenUsernameNotMatching_ThrowException() {
         this.userManager.loginUser("someRandomUserName", this.testee.getPassword());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void loginUser_WhenPasswordNotMatching_ThenIllegalArgumentException() {
+    public void loginUser_WhenPasswordNotMatching_ThrowException() {
         this.userManager.loginUser(this.testee.getUserName(), "someRandomPassword");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void loginUser_WhenCredentialsNotMatching_ThenIllegalArgumentException() {
+    public void loginUser_WhenCredentialsNotMatching_ThrowException() {
         this.userManager.loginUser("someRandomUserName", "someRandomPassword");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void loginUser_WhenUsernameNull_ThrowException() {
+        this.userManager.loginUser(null, this.testee.getPassword());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void loginUser_WhenUsernameEmpty_ThrowException() {
+        this.userManager.loginUser("", this.testee.getPassword());
     }
 
     private User getUserTestee() {

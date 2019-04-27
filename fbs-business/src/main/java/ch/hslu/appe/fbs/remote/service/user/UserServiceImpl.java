@@ -11,6 +11,7 @@ import ch.hslu.appe.fbs.remote.session.UserSessionMap;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<UserPermissions, Boolean> checkUserPermissions(final UserPermissions... userPermissions) {
+    public Map<UserPermissions, Boolean> checkUserPermissions(final List<UserPermissions> userPermissions) {
         if (userPermissions == null) {
             throw new IllegalArgumentException("The specified permissions can't be a null reference");
         }
