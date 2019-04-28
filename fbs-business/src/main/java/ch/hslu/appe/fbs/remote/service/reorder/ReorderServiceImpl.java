@@ -21,7 +21,9 @@ public final class ReorderServiceImpl implements ReorderService {
 
     private final ReorderManager reorderManager;
 
-    public ReorderServiceImpl(final ClientHost clientHost, final UserSessionMap userSessionMap, final ReorderManager reorderManager) {
+    public ReorderServiceImpl(final ClientHost clientHost,
+                              final UserSessionMap userSessionMap,
+                              final ReorderManager reorderManager) {
         this.clientHost = clientHost;
         this.userSessionMap = userSessionMap;
         this.reorderManager = reorderManager;
@@ -39,7 +41,7 @@ public final class ReorderServiceImpl implements ReorderService {
     public List<ReorderDTO> getAllReorders() throws RemoteException, UserNotAuthorisedException {
         final Optional<UserDTO> optUserDTO = this.userSessionMap.getUserSession(this.clientHost.getHostAddress());
         if(optUserDTO.isPresent()) {
-            this.reorderManager.getAllReorders(optUserDTO.get());
+            return this.reorderManager.getAllReorders(optUserDTO.get());
         }
         return Collections.emptyList();
     }
