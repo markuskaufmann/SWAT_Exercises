@@ -1,20 +1,14 @@
 package ch.hslu.appe.fbs.remote.service.user;
 
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.business.user.UserManager;
-import ch.hslu.appe.fbs.common.dto.*;
-import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
+import ch.hslu.appe.fbs.common.dto.UserDTO;
+import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
 import ch.hslu.appe.fbs.common.rmi.UserService;
-import ch.hslu.appe.fbs.data.orderstate.OrderStates;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
-import ch.hslu.appe.fbs.model.db.*;
 import ch.hslu.appe.fbs.remote.rmi.ClientHost;
-import ch.hslu.appe.fbs.remote.service.customer.CustomerServiceImpl;
 import ch.hslu.appe.fbs.remote.session.UserSessionMap;
-import ch.hslu.appe.fbs.wrapper.BillWrapper;
-import ch.hslu.appe.fbs.wrapper.CustomerWrapper;
-import ch.hslu.appe.fbs.wrapper.OrderWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,9 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.rmi.RemoteException;
-import java.security.Permissions;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -50,10 +41,10 @@ public final class UserServiceImplTest {
     private UserDTO userTestee;
 
     @Before
-    public void setUp() throws UserNotAuthorisedException {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         this.userService = new UserServiceImpl(this.clientHost, this.userSessionMap, this.userManager);
-        this.userTestee = getUserTestee(UserRoles.SYSADMIN);
+        this.userTestee = getUserTestee(UserRoles.SYSTEM_ADMINISTRATOR);
         when(this.clientHost.getHostAddress()).thenReturn(LOCALHOST);
         when(this.userSessionMap.getUserSession(LOCALHOST)).thenReturn(Optional.of(userTestee));
     }
@@ -123,7 +114,7 @@ public final class UserServiceImplTest {
 
     @Test
     public void checkUserPermissions_WhenGivenPermissionsAndUserNotPermitted_ThenReturnNegativeResult() throws RemoteException {
-        final UserDTO userNotPermitted = getUserTestee(UserRoles.BRANCHMANAGER);
+        final UserDTO userNotPermitted = getUserTestee(UserRoles.BRANCH_MANAGER);
 
         final List<UserPermissions> permissions = Arrays.asList(UserPermissions.CREATE_CUSTOMER, UserPermissions.DELETE_CUSTOMER,
                 UserPermissions.CREATE_ORDER, UserPermissions.CANCEL_ORDER);
@@ -143,7 +134,7 @@ public final class UserServiceImplTest {
 
     @Test
     public void checkUserPermissions_WhenGivenPermissionsAndUserPartlyPermitted_ThenReturnMixedResult() throws RemoteException {
-        final UserDTO userPartlyPermitted = getUserTestee(UserRoles.DATATYPIST);
+        final UserDTO userPartlyPermitted = getUserTestee(UserRoles.DATA_MANAGER);
 
         final List<UserPermissions> permissions = Arrays.asList(UserPermissions.CREATE_CUSTOMER, UserPermissions.CREATE_ORDER,
                 UserPermissions.GET_ORDER, UserPermissions.GET_ITEM);

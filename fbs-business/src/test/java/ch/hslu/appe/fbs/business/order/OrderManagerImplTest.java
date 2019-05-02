@@ -1,5 +1,7 @@
 package ch.hslu.appe.fbs.business.order;
 
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifierFactory;
 import ch.hslu.appe.fbs.business.bill.BillManager;
 import ch.hslu.appe.fbs.business.item.ItemManager;
 import ch.hslu.appe.fbs.common.dto.*;
@@ -8,10 +10,11 @@ import ch.hslu.appe.fbs.data.order.OrderPersistor;
 import ch.hslu.appe.fbs.data.orderitem.OrderItemPersistor;
 import ch.hslu.appe.fbs.data.orderstate.OrderStatePersistor;
 import ch.hslu.appe.fbs.data.orderstate.OrderStates;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.model.db.*;
 import ch.hslu.appe.fbs.wrapper.*;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -29,6 +32,8 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public final class OrderManagerImplTest {
+
+    private static AuthorisationVerifier authorisationVerifier;
 
     @Mock
     private OrderPersistor orderPersistor;
@@ -52,11 +57,16 @@ public final class OrderManagerImplTest {
     private UserDTO userTestee;
     private UserDTO unauthorizedUserTestee;
 
+    @BeforeClass
+    public static void setUpClass() {
+        authorisationVerifier = AuthorisationVerifierFactory.createAuthorisationVerifier();
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.orderManager = new OrderManagerImpl(this.orderPersistor, this.orderItemPersistor, this.orderStatePersistor,
-                                                    this.itemManager, this.billManager);
+        this.orderManager = new OrderManagerImpl(authorisationVerifier, this.orderPersistor, this.orderItemPersistor,
+                this.orderStatePersistor, this.itemManager, this.billManager);
         this.orderTestees = getOrderTestees();
         this.userTestee = getUserTestee();
         this.unauthorizedUserTestee = getUnauthorizedUserTestee();

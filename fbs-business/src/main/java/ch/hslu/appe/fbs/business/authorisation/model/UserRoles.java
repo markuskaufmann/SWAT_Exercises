@@ -1,10 +1,10 @@
-package ch.hslu.appe.fbs.data.userrole;
+package ch.hslu.appe.fbs.business.authorisation.model;
 
 public enum UserRoles {
-    SYSADMIN("SysAdmin"),
-    DATATYPIST("Datentypist"),
+    SYSTEM_ADMINISTRATOR("Systemadministrator"),
+    DATA_MANAGER("Datentypist"),
     SALESPERSON("Verkaufspersonal"),
-    BRANCHMANAGER("Filialleiter");
+    BRANCH_MANAGER("Filialleiter");
 
     private final String role;
 

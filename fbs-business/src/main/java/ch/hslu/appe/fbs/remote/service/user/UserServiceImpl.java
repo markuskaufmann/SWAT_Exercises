@@ -1,6 +1,7 @@
 package ch.hslu.appe.fbs.remote.service.user;
 
-import ch.hslu.appe.fbs.business.authorisation.AuthorisationManager;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifierFactory;
 import ch.hslu.appe.fbs.business.user.UserManager;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.permission.UserPermissions;
@@ -48,8 +49,9 @@ public final class UserServiceImpl implements UserService {
         final Optional<UserDTO> optUserDTO = this.userSessionMap.getUserSession(this.clientHost.getHostAddress());
         final Map<UserPermissions, Boolean> permissionMap = new HashMap<>();
         optUserDTO.ifPresent(userDTO -> {
+            final AuthorisationVerifier authorisationVerifier = AuthorisationVerifierFactory.createAuthorisationVerifier();
             for (UserPermissions userPermission : userPermissions) {
-                final boolean permissionGranted = AuthorisationManager.checkUserPermission(optUserDTO.get(), userPermission);
+                final boolean permissionGranted = authorisationVerifier.checkUserPermission(optUserDTO.get(), userPermission);
                 permissionMap.put(userPermission, permissionGranted);
             }
         });

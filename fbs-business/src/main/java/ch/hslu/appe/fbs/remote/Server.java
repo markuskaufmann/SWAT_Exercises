@@ -1,5 +1,7 @@
 package ch.hslu.appe.fbs.remote;
 
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifierFactory;
 import ch.hslu.appe.fbs.business.bill.BillManagerFactory;
 import ch.hslu.appe.fbs.business.customer.CustomerManagerFactory;
 import ch.hslu.appe.fbs.business.item.ItemManagerFactory;
@@ -50,14 +52,17 @@ public final class Server {
 
     private static ServiceRegistry setUpRmiServiceRegistry() {
         final UserSessionMap userSessionMap = UserSessionMapFactory.createUserSessionMap();
-        final UserService userService = UserServiceFactory.createUserService(userSessionMap, UserManagerFactory.createUserManager());
+        final AuthorisationVerifier authorisationVerifier = AuthorisationVerifierFactory.createAuthorisationVerifier();
+        final UserService userService = UserServiceFactory.createUserService(userSessionMap,
+                UserManagerFactory.createUserManager());
         final CustomerService customerService = CustomerServiceFactory.createCustomerService(userSessionMap,
-                CustomerManagerFactory.createCustomerManager(),
-                OrderManagerFactory.createOrderManager(),
-                BillManagerFactory.createBillManager());
-        final ItemService itemService = ItemServiceFactory.createItemService(userSessionMap, ItemManagerFactory.createItemManager());
+                CustomerManagerFactory.createCustomerManager(authorisationVerifier),
+                OrderManagerFactory.createOrderManager(authorisationVerifier),
+                BillManagerFactory.createBillManager(authorisationVerifier));
+        final ItemService itemService = ItemServiceFactory.createItemService(userSessionMap,
+                ItemManagerFactory.createItemManager(authorisationVerifier));
         final ReorderService reorderService = ReorderServiceFactory.createReorderService(userSessionMap,
-                ReorderManagerFactory.createReorderManager());
+                ReorderManagerFactory.createReorderManager(authorisationVerifier));
         return new RmiServiceRegistry(userService, customerService, itemService, reorderService);
     }
 

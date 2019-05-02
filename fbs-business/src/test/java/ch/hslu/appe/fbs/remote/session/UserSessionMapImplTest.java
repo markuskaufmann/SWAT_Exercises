@@ -1,9 +1,8 @@
 package ch.hslu.appe.fbs.remote.session;
 
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
-import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +21,7 @@ public final class UserSessionMapImplTest {
     private UserDTO userTestee;
 
     @Before
-    public void setUp() throws UserNotAuthorisedException {
+    public void setUp() {
         this.userSessionMap = new UserSessionMapImpl();
         this.userTestee = getUserTestee();
     }
@@ -90,7 +89,7 @@ public final class UserSessionMapImplTest {
     }
 
     private UserDTO getUserTestee() {
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSADMIN.getRole());
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSTEM_ADMINISTRATOR.getRole());
         return new UserDTO(1, userRoleDTO, "maxmuster");
     }
 }

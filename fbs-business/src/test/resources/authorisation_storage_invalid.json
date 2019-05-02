@@ -1,0 +1,146 @@
+{
+  "invalidProperty": [
+    {
+      "role": {
+        "name": "SYSTEM_ADMINISTRATOR"
+      },
+      "permissions": [
+        {
+          "name": "ADMIN"
+        }
+      ]
+    },
+    {
+      "role": {
+        "name": "DATA_MANAGER"
+      },
+      "permissions": [
+        {
+          "name": "ADD_ITEM"
+        },
+        {
+          "name": "EDIT_ITEM"
+        },
+        {
+          "name": "DELETE_ITEM"
+        },
+        {
+          "name": "MARK_REORDER_DELIVERED"
+        },
+        {
+          "name": "GET_CUSTOMER"
+        },
+        {
+          "name": "GET_ALL_CUSTOMERS"
+        },
+        {
+          "name": "GET_ORDER"
+        },
+        {
+          "name": "GET_ALL_ORDERS"
+        },
+        {
+          "name": "GET_REORDER"
+        },
+        {
+          "name": "GET_ALL_REORDERS"
+        },
+        {
+          "name": "GET_REMINDER"
+        },
+        {
+          "name": "GET_ALL_REMINDERS"
+        },
+        {
+          "name": "GET_ITEM"
+        },
+        {
+          "name": "GET_ALL_ITEMS"
+        }
+      ]
+    },
+    {
+      "role": {
+        "name": "SALESPERSON"
+      },
+      "permissions": [
+        {
+          "name": "CREATE_CUSTOMER"
+        },
+        {
+          "name": "EDIT_CUSTOMER"
+        },
+        {
+          "name": "DELETE_CUSTOMER"
+        },
+        {
+          "name": "GET_CUSTOMER"
+        },
+        {
+          "name": "GET_ALL_CUSTOMERS"
+        },
+        {
+          "name": "CREATE_ORDER"
+        },
+        {
+          "name": "EDIT_ORDER"
+        },
+        {
+          "name": "CANCEL_ORDER"
+        },
+        {
+          "name": "GET_ORDER"
+        },
+        {
+          "name": "GET_ALL_ORDERS"
+        },
+        {
+          "name": "GET_REORDER"
+        },
+        {
+          "name": "GET_ALL_REORDERS"
+        },
+        {
+          "name": "GET_REMINDER"
+        },
+        {
+          "name": "GET_ALL_REMINDERS"
+        },
+        {
+          "name": "GET_ITEM"
+        },
+        {
+          "name": "GET_ALL_ITEMS"
+        }
+      ]
+    },
+    {
+      "role": {
+        "name": "BRANCH_MANAGER"
+      },
+      "permissions": [
+        {
+          "name": "GET_ORDER"
+        },
+        {
+          "name": "GET_ALL_ORDERS"
+        },
+        {
+          "name": "GET_REORDER"
+        },
+        {
+          "name": "GET_ALL_REORDERS"
+        },
+        {
+          "name": "GET_REMINDER"
+        },
+        {
+          "name": "GET_ALL_REMINDERS"
+        },
+        {
+          "name": "VIEW_LOGS"
+        }
+      ]
+    }
+  ]
+}

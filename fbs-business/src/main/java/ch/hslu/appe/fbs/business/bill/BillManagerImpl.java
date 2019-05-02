@@ -1,6 +1,6 @@
 package ch.hslu.appe.fbs.business.bill;
 
-import ch.hslu.appe.fbs.business.authorisation.AuthorisationManager;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
 import ch.hslu.appe.fbs.common.dto.BillDTO;
 import ch.hslu.appe.fbs.common.dto.OrderDTO;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
@@ -14,18 +14,23 @@ import ch.hslu.appe.fbs.model.db.Reminder;
 import ch.hslu.appe.fbs.wrapper.BillWrapper;
 import ch.hslu.appe.fbs.wrapper.OrderWrapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public final class BillManagerImpl implements BillManager {
 
     private static final Object LOCK = new Object();
 
+    private final AuthorisationVerifier authorisationVerifier;
     private final BillPersistor billPersistor;
     private final ReminderPersistor reminderPersistor;
     private final BillWrapper billWrapper;
     private final OrderWrapper orderWrapper;
 
-    public BillManagerImpl(final BillPersistor billPersistor, final ReminderPersistor reminderPersistor) {
+    public BillManagerImpl(final AuthorisationVerifier authorisationVerifier, final BillPersistor billPersistor,
+                           final ReminderPersistor reminderPersistor) {
+        this.authorisationVerifier = authorisationVerifier;
         this.billPersistor = billPersistor;
         this.reminderPersistor = reminderPersistor;
         this.billWrapper = new BillWrapper();
@@ -73,7 +78,7 @@ public final class BillManagerImpl implements BillManager {
 
     @Override
     public List<BillDTO> getRemindedBillsByCustomerId(final int customerId, final UserDTO userDTO) throws UserNotAuthorisedException {
-        AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_REMINDER);
+        this.authorisationVerifier.checkUserAuthorisation(userDTO, UserPermissions.GET_REMINDER);
         synchronized (LOCK) {
             final List<BillDTO> bills = new ArrayList<>();
             final List<OrderDTO> orders = this.getOrdersByCustomerId(customerId);

@@ -1,20 +1,17 @@
 package ch.hslu.appe.fbs.remote.service.item;
 
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.business.item.ItemManager;
-import ch.hslu.appe.fbs.common.dto.*;
+import ch.hslu.appe.fbs.common.dto.ItemDTO;
+import ch.hslu.appe.fbs.common.dto.UserDTO;
+import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.rmi.ItemService;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
-import ch.hslu.appe.fbs.data.orderstate.OrderStates;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
-import ch.hslu.appe.fbs.model.db.*;
+import ch.hslu.appe.fbs.model.db.Item;
 import ch.hslu.appe.fbs.remote.rmi.ClientHost;
-import ch.hslu.appe.fbs.remote.service.customer.CustomerServiceImpl;
 import ch.hslu.appe.fbs.remote.session.UserSessionMap;
-import ch.hslu.appe.fbs.wrapper.BillWrapper;
-import ch.hslu.appe.fbs.wrapper.CustomerWrapper;
 import ch.hslu.appe.fbs.wrapper.ItemWrapper;
-import ch.hslu.appe.fbs.wrapper.OrderWrapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,14 +20,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.rmi.RemoteException;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -74,7 +68,7 @@ public final class ItemServiceImplTest {
     }
 
     private UserDTO getUserTestee() {
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSADMIN.getRole());
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSTEM_ADMINISTRATOR.getRole());
         return new UserDTO(1, userRoleDTO, "maxmuster");
     }
 

@@ -7,7 +7,7 @@ import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.rmi.ReorderService;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.model.db.Item;
 import ch.hslu.appe.fbs.model.db.Reorder;
 import ch.hslu.appe.fbs.remote.rmi.ClientHost;
@@ -136,7 +136,7 @@ public final class ReorderServiceImplTest {
     }
 
     private UserDTO getUserTestee() {
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSADMIN.getRole());
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSTEM_ADMINISTRATOR.getRole());
         return new UserDTO(1, userRoleDTO, "maxmuster");
     }
 

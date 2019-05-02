@@ -1,6 +1,6 @@
 package ch.hslu.appe.fbs.business.order;
 
-import ch.hslu.appe.fbs.business.authorisation.AuthorisationManager;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
 import ch.hslu.appe.fbs.business.bill.BillManager;
 import ch.hslu.appe.fbs.business.item.ItemManager;
 import ch.hslu.appe.fbs.business.logger.Logger;
@@ -30,6 +30,7 @@ public final class OrderManagerImpl implements OrderManager {
 
     private static final String ERROR_NULL_OBJ_REFERENCE = "object reference can't be null";
 
+    private final AuthorisationVerifier authorisationVerifier;
     private final OrderPersistor orderPersistor;
     private final OrderItemPersistor orderItemPersistor;
     private final OrderStatePersistor orderStatePersistor;
@@ -38,11 +39,13 @@ public final class OrderManagerImpl implements OrderManager {
     private final ItemManager itemManager;
     private final BillManager billManager;
 
-    public OrderManagerImpl(final OrderPersistor orderPersistor,
+    public OrderManagerImpl(final AuthorisationVerifier authorisationVerifier,
+                            final OrderPersistor orderPersistor,
                             final OrderItemPersistor orderItemPersistor,
                             final OrderStatePersistor orderStatePersistor,
                             final ItemManager itemManager,
                             final BillManager billManager) {
+        this.authorisationVerifier = authorisationVerifier;
         this.orderPersistor = orderPersistor;
         this.orderItemPersistor = orderItemPersistor;
         this.orderStatePersistor = orderStatePersistor;
@@ -54,7 +57,7 @@ public final class OrderManagerImpl implements OrderManager {
 
     @Override
     public List<OrderDTO> getOrders(final int customerId, final UserDTO userDTO) throws UserNotAuthorisedException {
-        AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ORDER);
+        this.authorisationVerifier.checkUserAuthorisation(userDTO, UserPermissions.GET_ORDER);
         synchronized (LOCK) {
             List<OrderDTO> orders = new ArrayList<>();
             this.orderPersistor.getByCustomer(customerId).forEach(order -> orders.add(orderWrapper.dtoFromEntity(order)));
@@ -72,7 +75,7 @@ public final class OrderManagerImpl implements OrderManager {
         if (orderState == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
-        AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ORDER);
+        this.authorisationVerifier.checkUserAuthorisation(userDTO, UserPermissions.GET_ORDER);
         synchronized (LOCK) {
             List<OrderDTO> orders = new ArrayList<>();
             this.orderPersistor.getByCustomerAndOrderState(customerId, orderState.getId())
@@ -86,7 +89,7 @@ public final class OrderManagerImpl implements OrderManager {
         if (order == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
-        AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.CREATE_ORDER);
+        this.authorisationVerifier.checkUserAuthorisation(userDTO, UserPermissions.CREATE_ORDER);
         synchronized (LOCK) {
             final Order persOrder = this.orderWrapper.entityFromDTO(order);
             this.orderPersistor.save(persOrder);
@@ -117,7 +120,7 @@ public final class OrderManagerImpl implements OrderManager {
         if (order == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
-        AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.CANCEL_ORDER);
+        this.authorisationVerifier.checkUserAuthorisation(userDTO, UserPermissions.CANCEL_ORDER);
         synchronized (LOCK) {
             final Order persOrder = this.orderWrapper.entityFromDTO(order);
             final Optional<OrderState> optOrderState = this.orderStatePersistor.getByState(OrderStates.CANCELLED.getState());
@@ -137,7 +140,7 @@ public final class OrderManagerImpl implements OrderManager {
         if (order == null) {
             throw new IllegalArgumentException(ERROR_NULL_OBJ_REFERENCE);
         }
-        AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.EDIT_ORDER);
+        this.authorisationVerifier.checkUserAuthorisation(userDTO, UserPermissions.EDIT_ORDER);
         synchronized (LOCK) {
             final Order persOrder = this.orderWrapper.entityFromDTO(order);
             final Optional<Order> oldOrder = this.orderPersistor.getById(persOrder.getId());
@@ -159,7 +162,7 @@ public final class OrderManagerImpl implements OrderManager {
 
     @Override
     public List<OrderDTO> getAllOrders(final UserDTO userDTO) throws UserNotAuthorisedException {
-        AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ALL_ORDERS);
+        this.authorisationVerifier.checkUserAuthorisation(userDTO, UserPermissions.GET_ALL_ORDERS);
         List<OrderDTO> orders = new ArrayList<>();
         synchronized (LOCK) {
             this.orderPersistor.getAll().forEach(order -> orders.add(this.orderWrapper.dtoFromEntity(order)));

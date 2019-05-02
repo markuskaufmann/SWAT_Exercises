@@ -1,5 +1,6 @@
 package ch.hslu.appe.fbs.remote.service.customer;
 
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.business.bill.BillManager;
 import ch.hslu.appe.fbs.business.customer.CustomerManager;
 import ch.hslu.appe.fbs.business.order.OrderManager;
@@ -8,7 +9,6 @@ import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.common.rmi.CustomerService;
 import ch.hslu.appe.fbs.common.rmi.RmiLookupTable;
 import ch.hslu.appe.fbs.data.orderstate.OrderStates;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
 import ch.hslu.appe.fbs.model.db.*;
 import ch.hslu.appe.fbs.remote.rmi.ClientHost;
 import ch.hslu.appe.fbs.remote.session.UserSessionMap;
@@ -28,9 +28,9 @@ import java.time.Instant;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public final class CustomerServiceImplTest {
@@ -230,7 +230,7 @@ public final class CustomerServiceImplTest {
     }
 
     private UserDTO getUserTestee() {
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSADMIN.getRole());
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSTEM_ADMINISTRATOR.getRole());
         return new UserDTO(1, userRoleDTO, "maxmuster");
     }
 

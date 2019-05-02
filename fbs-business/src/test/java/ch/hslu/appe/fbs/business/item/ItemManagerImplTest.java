@@ -1,5 +1,7 @@
 package ch.hslu.appe.fbs.business.item;
 
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifierFactory;
 import ch.hslu.appe.fbs.business.stock.Stock;
 import ch.hslu.appe.fbs.business.stock.StockException;
 import ch.hslu.appe.fbs.common.dto.ItemDTO;
@@ -8,11 +10,12 @@ import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.data.item.ItemPersistor;
 import ch.hslu.appe.fbs.data.reorder.ReorderPersistor;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.model.db.Item;
 import ch.hslu.appe.fbs.model.db.Reorder;
 import ch.hslu.appe.fbs.wrapper.ItemWrapper;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -33,6 +36,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public final class ItemManagerImplTest {
 
+    private static AuthorisationVerifier authorisationVerifier;
+
     @Mock
     private ItemPersistor itemPersistor;
 
@@ -45,10 +50,15 @@ public final class ItemManagerImplTest {
     private ItemManager itemManager;
     private List<Item> itemTestees;
 
+    @BeforeClass
+    public static void setUpClass() {
+        authorisationVerifier = AuthorisationVerifierFactory.createAuthorisationVerifier();
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.itemManager = new ItemManagerImpl(this.itemPersistor, this.reorderPersistor, this.stock);
+        this.itemManager = new ItemManagerImpl(authorisationVerifier, this.itemPersistor, this.reorderPersistor, this.stock);
         this.itemTestees = getItemTestees();
         when(this.itemPersistor.getAllItems()).thenReturn(this.itemTestees);
         when(this.itemPersistor.getItemById(this.itemTestees.get(0).getId())).thenReturn(Optional.of(this.itemTestees.get(0)));
@@ -302,7 +312,7 @@ public final class ItemManagerImplTest {
     }
 
     private UserDTO getNotAuthorizedUserTestee() {
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(2, UserRoles.BRANCHMANAGER.getRole());
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(2, UserRoles.BRANCH_MANAGER.getRole());
         return new UserDTO(2, userRoleDTO, "fritzmeier");
     }
 

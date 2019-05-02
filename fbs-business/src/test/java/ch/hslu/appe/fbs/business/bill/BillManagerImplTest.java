@@ -1,14 +1,17 @@
 package ch.hslu.appe.fbs.business.bill;
 
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifierFactory;
 import ch.hslu.appe.fbs.common.dto.BillDTO;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.data.bill.BillPersistor;
 import ch.hslu.appe.fbs.data.reminder.ReminderPersistor;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.model.db.*;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -27,6 +30,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public final class BillManagerImplTest {
 
+    private static AuthorisationVerifier authorisationVerifier;
+
     @Mock
     private BillPersistor billPersistor;
 
@@ -39,10 +44,15 @@ public final class BillManagerImplTest {
 
     private UserDTO userTestee;
 
+    @BeforeClass
+    public static void setUpClass() {
+        authorisationVerifier = AuthorisationVerifierFactory.createAuthorisationVerifier();
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.billManager = new BillManagerImpl(this.billPersistor, this.reminderPersistor);
+        this.billManager = new BillManagerImpl(authorisationVerifier, this.billPersistor, this.reminderPersistor);
         this.billTestees = getBillTestees();
         this.userTestee = getUserTestee();
         when(this.billPersistor.getAll()).thenReturn(this.billTestees);

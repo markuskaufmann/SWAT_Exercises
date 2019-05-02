@@ -1,18 +1,15 @@
 package ch.hslu.appe.fbs.business.reorder;
 
-import ch.hslu.appe.fbs.business.bill.BillManager;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifierFactory;
 import ch.hslu.appe.fbs.business.item.ItemManager;
-import ch.hslu.appe.fbs.business.order.OrderManagerImpl;
 import ch.hslu.appe.fbs.common.dto.*;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
-import ch.hslu.appe.fbs.data.orderitem.OrderItemPersistor;
-import ch.hslu.appe.fbs.data.orderstate.OrderStatePersistor;
-import ch.hslu.appe.fbs.data.orderstate.OrderStates;
 import ch.hslu.appe.fbs.data.reorder.ReorderPersistor;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.model.db.*;
-import ch.hslu.appe.fbs.wrapper.*;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -22,7 +19,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +26,8 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public final class ReorderManagerImplTest {
+
+    private static AuthorisationVerifier authorisationVerifier;
 
     @Mock
     private ReorderPersistor reorderPersistor;
@@ -44,10 +42,15 @@ public final class ReorderManagerImplTest {
     private UserDTO userTestee;
     private UserDTO unauthorizedUserTestee;
 
+    @BeforeClass
+    public static void setUpClass() {
+        authorisationVerifier = AuthorisationVerifierFactory.createAuthorisationVerifier();
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.reorderManager = new ReorderManagerImpl(this.reorderPersistor, this.itemManager);
+        this.reorderManager = new ReorderManagerImpl(authorisationVerifier, this.reorderPersistor, this.itemManager);
         this.reorderTestees = getReorderTestees();
         this.userTestee = getUserTestee();
         this.unauthorizedUserTestee = getUnauthorizedUserTestee();
@@ -116,7 +119,7 @@ public final class ReorderManagerImplTest {
     }
 
     private UserDTO getUserTestee() {
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.DATATYPIST.getRole());
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.DATA_MANAGER.getRole());
         return new UserDTO(1, userRoleDTO, "maxmuster");
     }
 

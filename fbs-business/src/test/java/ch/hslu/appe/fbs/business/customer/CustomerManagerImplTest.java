@@ -1,17 +1,19 @@
 package ch.hslu.appe.fbs.business.customer;
 
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifierFactory;
 import ch.hslu.appe.fbs.common.dto.CustomerDTO;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
 import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
 import ch.hslu.appe.fbs.data.customer.CustomerPersistor;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.model.db.Customer;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -27,6 +29,8 @@ import static org.mockito.Mockito.doAnswer;
 @RunWith(MockitoJUnitRunner.class)
 public final class CustomerManagerImplTest {
 
+    private static AuthorisationVerifier authorisationVerifier;
+
     @Mock
     private CustomerPersistor customerPersistor;
 
@@ -37,10 +41,15 @@ public final class CustomerManagerImplTest {
 
     private List<Customer> customerTestees;
 
+    @BeforeClass
+    public static void setUpClass() {
+        authorisationVerifier = AuthorisationVerifierFactory.createAuthorisationVerifier();
+    }
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.customerManager = new CustomerManagerImpl(this.customerPersistor);
+        this.customerManager = new CustomerManagerImpl(authorisationVerifier, this.customerPersistor);
         this.userTestee = getUserTestee();
         this.userNotAuthorizedTestee = getNotAuthorizedUserTestee();
         this.customerTestees = getCustomerTestees();
@@ -119,7 +128,7 @@ public final class CustomerManagerImplTest {
     }
 
     private UserDTO getNotAuthorizedUserTestee() {
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(2, UserRoles.BRANCHMANAGER.getRole());
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(2, UserRoles.BRANCH_MANAGER.getRole());
         return new UserDTO(2, userRoleDTO, "fritzmeier");
     }
 

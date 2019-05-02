@@ -1,6 +1,6 @@
 package ch.hslu.appe.fbs.business.item;
 
-import ch.hslu.appe.fbs.business.authorisation.AuthorisationManager;
+import ch.hslu.appe.fbs.business.authorisation.AuthorisationVerifier;
 import ch.hslu.appe.fbs.business.logger.Logger;
 import ch.hslu.appe.fbs.business.stock.Stock;
 import ch.hslu.appe.fbs.business.stock.StockException;
@@ -27,22 +27,24 @@ public final class ItemManagerImpl implements ItemManager {
     private static final String ERROR_NULL_OBJ_REFERENCE = "object reference can't be null";
     private static final String ERROR_INVALID_QUANTITY = "quantity has to be >= 1";
 
+    private final AuthorisationVerifier authorisationVerifier;
     private final ItemPersistor itemPersistor;
     private final ItemWrapper itemWrapper;
     private final ReorderPersistor reorderPersistor;
     private final Stock centralStock;
 
-    public ItemManagerImpl(final ItemPersistor itemPersistor, final ReorderPersistor reorderPersistor, final Stock stock) {
+    public ItemManagerImpl(final AuthorisationVerifier authorisationVerifier, final ItemPersistor itemPersistor,
+                           final ReorderPersistor reorderPersistor, final Stock stock) {
+        this.authorisationVerifier = authorisationVerifier;
         this.itemPersistor = itemPersistor;
         this.reorderPersistor = reorderPersistor;
         this.centralStock = stock;
         this.itemWrapper = new ItemWrapper();
     }
 
-
     @Override
     public List<ItemDTO> getAllItems(final UserDTO userDTO) throws UserNotAuthorisedException {
-        AuthorisationManager.checkUserAuthorisation(userDTO, UserPermissions.GET_ALL_ITEMS);
+        this.authorisationVerifier.checkUserAuthorisation(userDTO, UserPermissions.GET_ALL_ITEMS);
         synchronized (LOCK) {
             List<ItemDTO> itemDTOS = new ArrayList<>();
             this.itemPersistor.getAllItems().forEach(item -> itemDTOS.add(itemWrapper.dtoFromEntity(item)));

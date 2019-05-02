@@ -1,9 +1,8 @@
 package ch.hslu.appe.fbs.remote.session;
 
+import ch.hslu.appe.fbs.business.authorisation.model.UserRoles;
 import ch.hslu.appe.fbs.common.dto.UserDTO;
 import ch.hslu.appe.fbs.common.dto.UserRoleDTO;
-import ch.hslu.appe.fbs.common.exception.UserNotAuthorisedException;
-import ch.hslu.appe.fbs.data.userrole.UserRoles;
 import ch.hslu.appe.fbs.remote.rmi.ClientHost;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +30,7 @@ public final class UserSessionVerifierTest {
     private UserDTO userTestee;
 
     @Before
-    public void setUp() throws UserNotAuthorisedException {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         this.userTestee = getUserTestee();
         when(this.clientHost.getHostAddress()).thenReturn(LOCALHOST);
@@ -63,7 +62,7 @@ public final class UserSessionVerifierTest {
     }
 
     private UserDTO getUserTestee() {
-        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSADMIN.getRole());
+        final UserRoleDTO userRoleDTO = new UserRoleDTO(1, UserRoles.SYSTEM_ADMINISTRATOR.getRole());
         return new UserDTO(1, userRoleDTO, "maxmuster");
     }
 }
